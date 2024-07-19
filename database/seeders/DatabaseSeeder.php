@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tenant;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,11 +14,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        $tenant = Tenant::create([
+            'name' => 'Base Tenant',
+        ]);
+
+        $tenant->createDomain(config('tenancy.central_domains')[0]);
+        $user->tenants()->attach($tenant);
+
+        $tenant = Tenant::create([
+            'name' => 'Test Tenant',
+        ]);
+        $tenant->createDomain('app.' . config('tenancy.central_domains')[0]);
+        $user->tenants()->attach($tenant);
     }
 }
