@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        using: function () {
-            $centralDomains = config('tenancy.central_domains');
+        commands: __DIR__ . '/../routes/console.php',
+        health: '/up',
+        then: function () {
+            $centralDomains = config('tenancy.central_domains', []);
 
             foreach ($centralDomains as $domain) {
                 Route::middleware('web')
@@ -16,9 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->group(base_path('routes/web.php'));
             }
             Route::middleware('web')->group(base_path('routes/tenant.php'));
-        },
-        commands: __DIR__ . '/../routes/console.php',
-        health: '/up',
+        }
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->group('universal', []);
