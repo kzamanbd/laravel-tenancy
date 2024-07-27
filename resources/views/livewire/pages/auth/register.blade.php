@@ -19,7 +19,7 @@
     <div class="mt-4">
         <x-input-label for="subdomain" :value="__('Subdomain')" />
         <div class="flex w-full">
-            <x-text-input wire:model.live="subdomain" id="subdomain" class="block rounded-r-none" type="text"
+            <x-text-input wire:model="subdomain" id="subdomain" class="block rounded-r-none" type="text"
                 name="subdomain" required />
             <div
                 class="w-full flex items-center rounded-r-md border border-l-0 border-[#e0e6ed] bg-[#eee] px-3 font-semibold dark:border-[#17263c] dark:bg-[#1b2e4b]">

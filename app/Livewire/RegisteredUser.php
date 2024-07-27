@@ -21,12 +21,6 @@ class RegisteredUser extends Component
     public string $password_confirmation = '';
     public string $subdomain = '';
 
-
-    public function updatedSubdomain($value)
-    {
-        $this->subdomain = str_replace(' ', '-', strtolower(trim($value)));
-    }
-
     /**
      * Handle an incoming registration request.
      */
@@ -35,8 +29,10 @@ class RegisteredUser extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'subdomain' => ['required', 'string', 'lowercase'],
+            'subdomain' => ['required', 'string', 'regex:/^[a-z-]+$/'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'subdomain.regex' => 'Subdomain can only contain lowercase letters and hyphens.',
         ]);
 
         DB::transaction(function () use ($validated) {
