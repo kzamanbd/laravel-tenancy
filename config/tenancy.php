@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Tenant;
 use Stancl\Tenancy\Database\Models\Domain;
+use Illuminate\Support\Str;
 
 return [
     'tenant_model' => Tenant::class,
@@ -51,7 +52,7 @@ return [
          * prefix + tenant_id + suffix.
          */
         'prefix' => 'tenant',
-        'suffix' => 'app',
+        'suffix' => Str::substr(Str::uuid(), 16),
 
         /**
          * TenantDatabaseManagers are classes that handle the creation & deletion of tenant databases.
@@ -167,7 +168,7 @@ return [
         // Stancl\Tenancy\Features\UniversalRoutes::class,
         // Stancl\Tenancy\Features\TenantConfig::class, // https://tenancyforlaravel.com/docs/v3/features/tenant-config
         // Stancl\Tenancy\Features\CrossDomainRedirect::class, // https://tenancyforlaravel.com/docs/v3/features/cross-domain-redirect
-        // Stancl\Tenancy\Features\ViteBundler::class,
+        Stancl\Tenancy\Features\ViteBundler::class,
     ],
 
     /**
