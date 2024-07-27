@@ -54,7 +54,7 @@ class RegisteredUser extends Component
 
             Auth::login($user);
 
-            $this->redirect($domain, navigate: true);
+            $this->redirect('https://' . $domain);
         });
     }
 
