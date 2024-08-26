@@ -25,13 +25,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'Base Tenant',
         ]);
 
-        $tenant->createDomain(config('tenancy.central_domains')[0]);
+        $tenant->createDomain(config('app.central_domain'));
         $user->tenants()->attach($tenant);
 
         $tenant = Tenant::create([
             'name' => 'Test Tenant',
         ]);
-        $tenant->createDomain('app.' . config('tenancy.central_domains')[0]);
+        $tenant->createDomain('app.' . config('app.central_domain'));
         $user->tenants()->attach($tenant);
     }
 }

@@ -20,7 +20,7 @@ class TenantManagement extends Component
         try {
             $validatedData = $this->validate([
                 'name' => 'required|string|max:255',
-                'subdomain' => 'required|string|max:255|unique:domains,domain'
+                'subdomain' => 'required|alpha_dash|unique:domains,domain'
             ]);
 
             $tenant = Tenant::create($validatedData);
