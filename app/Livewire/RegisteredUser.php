@@ -21,6 +21,13 @@ class RegisteredUser extends Component
     public string $password_confirmation = '';
     public string $subdomain = '';
 
+    public string $baseDomain = '';
+
+    public function mount()
+    {
+        $this->baseDomain = request()->getHost();
+    }
+
     /**
      * Handle an incoming registration request.
      */
@@ -44,13 +51,15 @@ class RegisteredUser extends Component
                 'name' => $this->name,
             ]);
 
-            $domain = $this->subdomain . '.' . config('tenancy.central_domains')[0];
+            $domain = $this->subdomain . '.' . $this->baseDomain;
             $tenant->createDomain($domain);
             $user->tenants()->attach($tenant);
 
             Auth::login($user);
 
-            $this->redirect('https://' . $domain);
+            // if user browse with https then redirect to https
+            $protocol = request()->isSecure() ? 'https://' : 'http://';
+            $this->redirect($protocol . $domain);
         });
     }
 
