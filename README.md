@@ -2,17 +2,25 @@
 
 ## Config Local Env(Server)
 
-Install homebrew, after brew install install php
+### Setup Laravel `Herd` for server environment
 
-```sh
-brew tap shivammathur/php
+1. Create a new file named `.env` in the root directory of the project.
+2. Copy the contents of the `.env.example` file and paste it into the `.env` file.
+3. Update the database connection settings in the `.env` file.
+4. Run the following command to generate a new application key:
 
-brew install shivammathur/php/php@8.3
+```bash
+php artisan key:generate
+```
 
-// start brew services start shivammathur/php/php
+[x]. Run the following command to create the database tables:
 
-brew install dnsmasq
+```bash
+php artisan migrate
+```
 
-// start brew services start dnsmasq
+[x]. Run the following command to seed the database tables:
 
+```bash
+php artisan db:seed
 ```
