@@ -39,7 +39,7 @@ class TenantManagement extends Component
 
     public function getTenantsProperty()
     {
-        return Tenant::with('domains')->get();
+        return Tenant::with(['domains', 'users'])->get();
     }
 
     public function render()

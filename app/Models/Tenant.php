@@ -10,4 +10,9 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

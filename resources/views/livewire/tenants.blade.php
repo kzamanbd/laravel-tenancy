@@ -37,7 +37,7 @@
                                             {{ $tenant->name }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            {{ $tenant->email }}
+                                            {{ $tenant->users->pluck('email')->implode(', ') }}
                                         </td>
                                         <td class="px-6 py-4">
                                             @foreach ($tenant->domains as $domain)
