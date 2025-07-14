@@ -5,9 +5,7 @@ namespace App\Livewire;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Livewire\Attributes\Layout;
 
-#[Layout('layouts.app')]
 class TenantManagement extends Component
 {
 

@@ -2,26 +2,29 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "laravel/breeze": "^2.0",
-        "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.4",
+        "laravel/framework": "^12.0",
+        "laravel/tinker": "^2.10",
+        "livewire/livewire": "^v3.6",
+        "livewire/flux": "^2.1.1",
         "livewire/volt": "^1.0",
-        "stancl/tenancy": "^3.8"
+        "stancl/tenancy": "^3.9"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
+        "fakerphp/faker": "^v1.24",
+        "laravel/pail": "^v1.2",
+        "laravel/pint": "^v1.21",
+        "laravel/sail": "^v1.41",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.0",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
-        "spatie/laravel-ignition": "^2.4"
+        "nunomaduro/collision": "^v8.6",
+        "pestphp/pest": "^v3.7",
+        "pestphp/pest-plugin-laravel": "v3.1.0"
     },
     "autoload": {
         "psr-4": {

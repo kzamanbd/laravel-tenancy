@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Livewire\LoggedInUser;
-use App\Livewire\RegisteredUser;
-use App\Livewire\TenantManagement;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
+use App\Livewire\Auth\VerifyEmail;
+use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Auth\ForgotPassword;
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
+use App\Livewire\Auth\ConfirmPassword;
+use App\Http\Controllers\Auth\VerifyEmailController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -34,33 +36,25 @@ Route::middleware([
         ->middleware(['auth', 'verified'])
         ->name('dashboard');
 
-    Route::view('profile', 'profile')
+    Route::redirect('settings', 'settings/profile')
         ->middleware(['auth'])
         ->name('profile');
 
     Route::middleware('guest')->group(function () {
-        Route::get('register', RegisteredUser::class)
-            ->name('register');
-
-        Route::get('login', LoggedInUser::class)
-            ->name('login');
-
-        Volt::route('forgot-password', 'pages.auth.forgot-password')
-            ->name('password.request');
-
-        Volt::route('reset-password/{token}', 'pages.auth.reset-password')
-            ->name('password.reset');
+        Route::get('login', Login::class)->name('login');
+        Route::get('register', Register::class)->name('register');
+        Route::get('forgot-password', ForgotPassword::class)->name('password.request');
+        Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
     });
 
     Route::middleware('auth')->group(function () {
-        Volt::route('verify-email', 'pages.auth.verify-email')
-            ->name('verification.notice');
+        Route::get('verify-email', VerifyEmail::class)->name('verification.notice');
 
         Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
             ->middleware(['signed', 'throttle:6,1'])
             ->name('verification.verify');
 
-        Volt::route('confirm-password', 'pages.auth.confirm-password')
-            ->name('password.confirm');
+        Route::get('confirm-password', ConfirmPassword::class)->name('password.confirm');
+        Route::post('logout', App\Livewire\Actions\Logout::class)->name('logout');
     });
 });
