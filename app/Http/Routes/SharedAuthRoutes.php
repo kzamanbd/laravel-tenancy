@@ -2,17 +2,17 @@
 
 namespace App\Http\Routes;
 
+use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Livewire\Auth\ConfirmPassword;
+use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
-use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Auth\ForgotPassword;
-use App\Livewire\Auth\ConfirmPassword;
-use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\Password;
+use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Password;
+use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\VerifyEmailController;
 
 class SharedAuthRoutes
 {

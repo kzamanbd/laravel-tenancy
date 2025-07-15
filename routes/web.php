@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Routes\SharedAuthRoutes;
 use App\Livewire\TenantManagement;
 use Illuminate\Support\Facades\Route;
-use App\Http\Routes\SharedAuthRoutes;
 
 foreach (config('tenancy.central_domains') as $domain) {
     Route::domain($domain)->group(function () {
@@ -18,7 +18,6 @@ foreach (config('tenancy.central_domains') as $domain) {
             // Tenant management (only on central domain)
             Route::get('tenants', TenantManagement::class)->name('tenants');
         });
-
 
         // Register shared authentication routes
         SharedAuthRoutes::register();

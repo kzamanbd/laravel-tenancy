@@ -12,8 +12,8 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
     use CentralConnection;
+    use HasFactory, Notifiable;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;

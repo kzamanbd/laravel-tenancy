@@ -4,12 +4,12 @@ namespace App\Livewire\Auth;
 
 use App\Models\Tenant;
 use App\Models\User;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Illuminate\Validation\Rules;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Validation\Rules;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
 class Register extends Component
@@ -30,7 +30,7 @@ class Register extends Component
     {
         // Initialize baseDomain with the first available domain
         $centralDomains = config('tenancy.central_domains', []);
-        $this->baseDomain = !empty($centralDomains) ? $centralDomains[0] : '';
+        $this->baseDomain = ! empty($centralDomains) ? $centralDomains[0] : '';
     }
 
     /**
@@ -40,10 +40,10 @@ class Register extends Component
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
             'subdomain' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:tenants,id'],
-            'baseDomain' => ['required', 'string', 'in:' . implode(',', config('tenancy.central_domains'))],
+            'baseDomain' => ['required', 'string', 'in:'.implode(',', config('tenancy.central_domains'))],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -55,7 +55,7 @@ class Register extends Component
             'name' => $this->name,
         ]);
 
-        $domain = $this->subdomain . '.' . $this->baseDomain;
+        $domain = $this->subdomain.'.'.$this->baseDomain;
         $tenant->createDomain($domain);
         $user->tenants()->attach($tenant);
 
@@ -64,6 +64,6 @@ class Register extends Component
 
         // if user browse with https then redirect to https
         $protocol = request()->isSecure() ? 'https://' : 'http://';
-        $this->redirect($protocol . $domain);
+        $this->redirect($protocol.$domain);
     }
 }
