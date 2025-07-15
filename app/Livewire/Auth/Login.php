@@ -16,10 +16,10 @@ use Livewire\Component;
 class Login extends Component
 {
     #[Validate('required|string|email')]
-    public string $email = '';
+    public string $email = 'test@example.com';
 
     #[Validate('required|string')]
-    public string $password = '';
+    public string $password = 'password';
 
     public bool $remember = false;
 
@@ -72,6 +72,6 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }
