@@ -22,7 +22,7 @@
         @apply hidden overflow-hidden transition-[height] duration-300;
     }
     .auth-card {
-        @apply relative z-10 w-full max-w-lg;
+        @apply relative z-10 w-full max-w-md;
     }
     .auth-card .card-body {
         @apply dark:bg-dark rounded-md bg-white px-8 py-6 shadow-md dark:border dark:border-gray-600 dark:text-gray-200;

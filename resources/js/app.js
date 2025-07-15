@@ -184,8 +184,7 @@ const twSelector = (el, multiple = false) => {
     twSelector(".loading")?.remove();
 
     // Active menu logic
-    const path = window.location.pathname;
-    const currentPath = path === "/" ? "/index.html" : path;
+    const currentPath = window.location.href;
 
     const menuItem = twSelector(`.tw-nav-menu a[href="${currentPath}"]`);
     if (menuItem) {
