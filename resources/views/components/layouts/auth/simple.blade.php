@@ -8,10 +8,13 @@
     <body>
         <div class="tw--radial-gradient">
             <div class="flex min-h-svh items-center justify-center overflow-hidden p-6">
-                {{ $slot }}
+                <div class="auth-card">
+                    <div class="auth-card-left"></div>
+                    {{ $slot }}
+                    <div class="auth-card-right"></div>
+                </div>
             </div>
         </div>
-        @fluxScripts
     </body>
 
 </html>

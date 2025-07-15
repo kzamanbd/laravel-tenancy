@@ -1,45 +1,102 @@
-<div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
+<div class="card-body">
+    <!-- Logo and Title -->
+    <div class="my-4 flex items-center justify-center">
+        <x-app-logo />
+    </div>
+
+    <!-- Welcome Message -->
+    <div class="my-3">
+        <p class="mb-2 hidden text-2xl font-semibold md:block">Reset password</p>
+        <p class="text-xs">Please enter your new password below</p>
+    </div>
 
     <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+    <x-auth-session-status class="text-center mb-4" :status="session('status')" />
 
-    <form wire:submit="resetPassword" class="flex flex-col gap-6">
+    <!-- Reset Password Form -->
+    <form wire:submit="resetPassword" class="my-3">
         <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email')"
-            type="email"
-            required
-            autocomplete="email"
-        />
+        <div class="block">
+            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <input id="email" type="email" name="email" wire:model="email" class="form-control"
+                placeholder="email@example.com" autocomplete="email" required />
+            @error('email')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
 
         <!-- Password -->
-        <flux:input
-            wire:model="password"
-            :label="__('Password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
-            viewable
-        />
+        <div class="my-2">
+            <label for="password" class="form-label">{{ __('Password') }}</label>
+            <div class="relative">
+                <input id="password" type="password" name="password" wire:model="password" class="form-control"
+                    placeholder="{{ __('Password') }}" autocomplete="new-password" required />
+                <button type="button"
+                    data-hs-toggle-password='{
+                                    "target": ["#password"]
+                                  }'
+                    class="absolute inset-y-0 end-0 z-20 flex cursor-pointer items-center rounded-e-md px-3 text-gray-400 focus:text-blue-600 focus:outline-hidden dark:text-neutral-600 dark:focus:text-blue-500">
+                    <svg class="size-3.5 shrink-0 dark:text-gray-200" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                        <path class="hs-password-active:hidden"
+                            d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68">
+                        </path>
+                        <path class="hs-password-active:hidden"
+                            d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61">
+                        </path>
+                        <line class="hs-password-active:hidden" x1="2" x2="22" y1="2"
+                            y2="22"></line>
+                        <path class="hs-password-active:block hidden" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z">
+                        </path>
+                        <circle class="hs-password-active:block hidden" cx="12" cy="12" r="3">
+                        </circle>
+                    </svg>
+                </button>
+            </div>
+            @error('password')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
 
         <!-- Confirm Password -->
-        <flux:input
-            wire:model="password_confirmation"
-            :label="__('Confirm password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Confirm password')"
-            viewable
-        />
-
-        <div class="flex items-center justify-end">
-            <flux:button type="submit" variant="primary" class="w-full">
-                {{ __('Reset password') }}
-            </flux:button>
+        <div class="my-2">
+            <label for="password_confirmation" class="form-label">{{ __('Confirm password') }}</label>
+            <div class="relative">
+                <input id="password_confirmation" type="password" name="password_confirmation"
+                    wire:model="password_confirmation" class="form-control" placeholder="{{ __('Confirm password') }}"
+                    autocomplete="new-password" required />
+                <button type="button"
+                    data-hs-toggle-password='{
+                                    "target": ["#password_confirmation"]
+                                  }'
+                    class="absolute inset-y-0 end-0 z-20 flex cursor-pointer items-center rounded-e-md px-3 text-gray-400 focus:text-blue-600 focus:outline-hidden dark:text-neutral-600 dark:focus:text-blue-500">
+                    <svg class="size-3.5 shrink-0 dark:text-gray-200" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                        <path class="hs-password-active:hidden"
+                            d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68">
+                        </path>
+                        <path class="hs-password-active:hidden"
+                            d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61">
+                        </path>
+                        <line class="hs-password-active:hidden" x1="2" x2="22" y1="2"
+                            y2="22"></line>
+                        <path class="hs-password-active:block hidden" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z">
+                        </path>
+                        <circle class="hs-password-active:block hidden" cx="12" cy="12" r="3">
+                        </circle>
+                    </svg>
+                </button>
+            </div>
+            @error('password_confirmation')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
         </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-full mt-4">{{ __('Reset password') }}</button>
     </form>
 </div>

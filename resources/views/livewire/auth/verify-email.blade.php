@@ -1,21 +1,34 @@
-<div class="mt-4 flex flex-col gap-6">
-    <flux:text class="text-center">
-        {{ __('Please verify your email address by clicking on the link we just emailed to you.') }}
-    </flux:text>
+<div class="card-body">
+    <!-- Logo and Title -->
+    <div class="my-4 flex items-center justify-center">
+        <x-app-logo />
+    </div>
 
+    <!-- Welcome Message -->
+    <div class="my-3">
+        <p class="mb-2 hidden text-2xl font-semibold md:block">Verify your email</p>
+        <p class="text-xs">Please verify your email address by clicking on the link we just emailed to you.</p>
+    </div>
+
+    <!-- Session Status -->
     @if (session('status') == 'verification-link-sent')
-        <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-        </flux:text>
+        <div class="text-center mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+            <span class="text-green-600 text-sm font-medium">
+                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+            </span>
+        </div>
     @endif
 
-    <div class="flex flex-col items-center justify-between space-y-3">
-        <flux:button wire:click="sendVerification" variant="primary" class="w-full">
+    <!-- Resend Verification Form -->
+    <div class="my-3">
+        <button wire:click="sendVerification" class="btn btn-primary w-full mb-4">
             {{ __('Resend verification email') }}
-        </flux:button>
+        </button>
 
-        <flux:link class="text-sm cursor-pointer" wire:click="logout">
-            {{ __('Log out') }}
-        </flux:link>
+        <div class="text-center">
+            <button wire:click="logout" class="text-sm text-gray-600 hover:text-gray-800 cursor-pointer">
+                {{ __('Log out') }}
+            </button>
+        </div>
     </div>
 </div>
