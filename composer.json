@@ -12,8 +12,6 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10",
         "livewire/livewire": "^v3.6",
-        "livewire/flux": "^2.1.1",
-        "livewire/volt": "^1.0",
         "stancl/tenancy": "^3.9"
     },
     "require-dev": {
