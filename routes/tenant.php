@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Routes\SharedAuthRoutes;
+use App\Http\Routes\SharedRoutes;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -27,6 +27,6 @@ Route::middleware([
     // Public routes
     Route::view('/', 'welcome')->name('home');
 
-    // Register shared authentication routes
-    SharedAuthRoutes::register();
+    // Shared routes
+    SharedRoutes::register();
 });
