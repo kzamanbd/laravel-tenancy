@@ -1,0 +1,38 @@
+@layer components {
+    .card {
+        @apply dark:bg-dark rounded-xl border border-gray-100 bg-white shadow-xs dark:border-gray-700 print:border-0;
+    }
+    .card-header {
+        @apply border-b border-dashed border-gray-200 px-5 py-3 dark:border-gray-700 print:border-0;
+    }
+    .card-body {
+        @apply p-5;
+    }
+    .variant--bordered .card {
+        @apply border border-gray-200 dark:border-gray-700;
+    }
+    .card-footer {
+        @apply border-t border-dashed border-gray-200 px-5 py-3 dark:border-gray-700 print:border-0;
+    }
+    /* accordion */
+    .tw-accordion {
+        @apply rounded border px-5 py-3;
+    }
+    .tw-accordion-content {
+        @apply hidden overflow-hidden transition-[height] duration-300;
+    }
+    .auth-card {
+        @apply relative z-10 w-full max-w-lg;
+    }
+    .auth-card .card-body {
+        @apply dark:bg-dark rounded-md bg-white px-8 py-6 shadow-md dark:border dark:border-gray-600 dark:text-gray-200;
+    }
+    .auth-card-left {
+        @apply absolute -top-10 -left-10 z-[-1] size-60 rounded-3xl bg-purple-300/10;
+        @apply before:absolute before:-top-10 before:-right-10 before:z-[-1] before:size-36 before:rounded-3xl before:border-2 before:border-purple-500/10;
+    }
+    .auth-card-right {
+        @apply absolute -right-10 -bottom-10 z-[-1] size-44 rounded-3xl bg-purple-300/10;
+        @apply before:absolute before:-right-6 before:-bottom-6 before:z-[-1] before:size-60 before:border-2 before:border-r-0 before:border-b-0 before:border-dashed before:border-purple-500/10;
+    }
+}

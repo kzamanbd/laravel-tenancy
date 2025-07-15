@@ -1,0 +1,171 @@
+@layer components {
+    .vertical-menu {
+        @apply dark:bg-dark [&.semi-dark]:bg-dark fixed inset-y-0 z-30 w-64 border-r bg-white print:hidden;
+        @apply transition-[width,translate] ease-in-out ltr:-translate-x-full ltr:lg:translate-x-0 rtl:translate-x-0;
+    }
+    .vertical-menu.floating {
+        @apply md:inset-y-2 md:left-2 md:rounded-lg;
+    }
+    .vertical-content {
+        @apply flex h-full flex-col content-around;
+    }
+    .expanded.vertical-menu {
+        @apply translate-x-0;
+    }
+    .menu-shadow {
+        @apply fixed inset-0 z-[25] cursor-pointer bg-black opacity-50 transition-opacity lg:hidden;
+    }
+    .tw-brand-logo {
+        @apply relative flex h-14 items-center justify-between px-4 py-2 text-sm;
+        @apply before:absolute before:-bottom-4 before:left-0 before:z-10 before:h-4 before:w-full before:bg-gradient-to-b before:from-white dark:before:hidden;
+    }
+    .tw-logo {
+        @apply h-8 w-8 object-contain;
+    }
+    .app-name {
+        @apply mx-2 flex items-center text-xl font-semibold ease-in-out dark:text-gray-200;
+    }
+
+    .tw-menu-header {
+        @apply relative w-full truncate p-2 text-xs font-semibold text-gray-400 uppercase after:absolute after:top-3 after:left-0 after:w-full after:bg-gray-300;
+    }
+    .vertical-menu .tw-menu-header .minus {
+        @apply hidden;
+    }
+    .tw-menu-content {
+        @apply h-[calc(100vh_-_120px)] overflow-x-hidden overflow-y-auto;
+    }
+    .vertical-menu .tw-nav-menu {
+        @apply mt-2 space-y-1 px-4 pb-2;
+    }
+    .vertical-menu .tw-menu-link {
+        @apply hover:bg-primary-100 hover:text-primary flex w-full items-center rounded-md px-1.5 py-2 text-sm font-normal text-gray-700 dark:text-gray-400 hover:dark:bg-gray-700 dark:hover:text-gray-100;
+        @apply from-primary-50 to-primary-100 hover:bg-gradient-to-br dark:from-gray-600 dark:to-gray-700 dark:hover:from-gray-600 dark:hover:to-gray-700;
+    }
+    .collapsed-menu .vertical-menu:not(:hover) .tw-brand-logo,
+    .collapsed-menu .vertical-menu:not(:hover) .tw-menu-link,
+    .collapsed-menu .vertical-menu:not(:hover) .footer-menu-icon {
+        @apply justify-center;
+    }
+    .vertical-menu .tw-menu-link.active,
+    .vertical-menu .tw-menu-item.active > .tw-menu-link,
+    .vertical-menu .twd--menu-item.active > .tw-menu-link {
+        @apply bg-primary-100/75 text-primary hover:bg-primary-100 dark:bg-gray-700 dark:text-gray-100;
+        @apply from-primary-50 to-primary-100 bg-gradient-to-br dark:from-gray-600 dark:to-gray-700;
+    }
+    .tw-link-label {
+        @apply mx-2 truncate text-sm font-medium;
+    }
+    .vertical-menu .twd--menu {
+        @apply mt-1 hidden space-y-1 overflow-hidden transition-all duration-300 ease-in-out;
+    }
+    .vertical-menu .twd--menu-item {
+        @apply ml-2 rounded-md text-sm hover:text-gray-900 dark:hover:text-gray-100;
+    }
+    .vertical-menu .tw-arrow {
+        @apply size-5 -rotate-90 transform transition-transform ltr:ml-auto rtl:mr-auto;
+    }
+    .tw-menu-link.active > .tw-arrow,
+    .tw-menu-item.active > .tw-menu-link .tw-arrow,
+    .twd--menu-item.active > .twd--link .tw-arrow {
+        @apply rotate-0;
+    }
+    .vertical-menu .twd--link {
+        @apply hover:bg-primary-100 hover:text-primary flex w-full items-center truncate rounded-md p-1.5 text-sm font-medium text-gray-700 ltr:pl-6 rtl:pr-6 dark:text-gray-400 hover:dark:bg-gray-700 dark:hover:text-gray-100;
+        @apply hover:after:border-primary relative after:absolute after:size-2 after:rounded-full after:border after:border-gray-500 ltr:after:left-2 rtl:after:right-2 dark:hover:after:border-gray-100;
+    }
+    .vertical-menu .twd--link.active {
+        @apply text-primary after:border-primary after:bg-primary dark:text-gray-100 dark:after:border-gray-100;
+    }
+    /* semi dark */
+    .semi-dark .app-name {
+        @apply text-gray-300;
+    }
+    .semi-dark .twd--link {
+        @apply text-gray-300;
+    }
+    .semi-dark .tw-menu-link {
+        @apply from-gray-600 to-gray-700 text-gray-400 hover:bg-gray-700 hover:from-gray-600 hover:to-gray-700 hover:text-gray-100;
+    }
+    .semi-dark .tw-menu-link.active,
+    .semi-dark .tw-menu-item.active .tw-menu-link {
+        @apply bg-gray-700 from-gray-600 to-gray-700 text-gray-100 hover:bg-gray-700 hover:from-gray-600 hover:to-gray-700;
+    }
+    .semi-dark .twd--link {
+        @apply text-gray-400 hover:bg-gray-700 hover:text-gray-100 [&.active]:text-gray-100;
+    }
+    .collapsed-icon,
+    .expanded-icon {
+        @apply text-primary hidden transition-opacity duration-300 ease-in-out lg:block;
+    }
+    .collapsed-menu .vertical-menu {
+        @apply translate-x-0 hover:w-64 lg:w-[70px];
+    }
+    .collapsed-menu .vertical-menu:not(:hover) .tw-menu-header .minus {
+        @apply lg:inline-block;
+    }
+    .collapsed-menu .vertical-menu .expanded-icon,
+    .collapsed-menu .vertical-menu:not(:hover) .app-name,
+    .tw--wrapper:not(.collapsed-menu) .vertical-menu .collapsed-icon {
+        @apply hidden;
+    }
+    .vertical-menu .tw-menu-header .minus,
+    .collapsed-menu .vertical-menu:not(:hover) .tw-arrow,
+    .collapsed-menu .vertical-menu:not(:hover) .toggle-sidebar,
+    .collapsed-menu .vertical-menu:not(:hover) .tw-menu-header .label,
+    .collapsed-menu .vertical-menu:not(:hover) .tw-nav-menu .tw-link-label,
+    .collapsed-menu .vertical-menu:not(:hover) .app-switcher-label {
+        @apply lg:hidden;
+    }
+    .collapsed-menu .vertical-menu:not(:hover) .twd--menu {
+        @apply h-0;
+    }
+    /* vertical menu */
+    .collapsed-menu .vertical-menu .tw-arrow,
+    .collapsed-menu .vertical-menu .tw-nav-menu .tw-link-label {
+        @apply lg:block;
+    }
+    /* boxed layout */
+    .boxed-layout .vertical-menu {
+        @apply lg:left-auto;
+    }
+    .footer-menu-dropdown {
+        @apply mt-auto border-t px-4 py-2 text-sm dark:border-gray-700;
+    }
+    .footer-menu-dropdown .dropdown-menu {
+        @apply w-56 p-1;
+    }
+    .tw-nav-footer-item {
+        @apply inline-flex w-full cursor-pointer items-center gap-2 rounded px-3 py-2 text-start hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600;
+    }
+    .tw-nav-footer-item.active {
+        @apply bg-gray-100 dark:bg-gray-600;
+    }
+    .footer-menu-text {
+        @apply group-hover:text-primary-600 block text-xs font-bold dark:text-neutral-200 dark:group-hover:text-gray-300;
+    }
+    .footer-menu-icon {
+        @apply inline-flex w-full items-center text-start dark:text-white;
+    }
+    .app-switcher-label {
+        @apply ms-2 flex w-full items-center justify-between;
+    }
+    .semi-dark .app-switcher-label {
+        @apply text-gray-300;
+    }
+    .semi-dark .footer-menu-icon svg {
+        @apply text-gray-300;
+    }
+    .semi-dark .footer-menu-dropdown {
+        @apply border-gray-600;
+    }
+    .hidden-menu .vertical-menu {
+        @apply ltr:lg:-translate-x-[200%] rtl:lg:translate-x-[200%];
+    }
+    .hidden-menu .vertical-menu.expanded {
+        @apply ltr:translate-x-0 rtl:translate-x-0;
+    }
+    body:has(.vertical-menu.expanded) {
+        @apply overflow-hidden;
+    }
+}

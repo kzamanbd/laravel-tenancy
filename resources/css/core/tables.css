@@ -1,0 +1,61 @@
+@layer components {
+    .tw-table {
+        @apply w-full border-collapse text-sm;
+    }
+    .tw-table thead tr th,
+    .tw-table tbody tr th,
+    .tw-table tbody tr td,
+    .tw-table tfoot tr th,
+    .tw-table tfoot tr td {
+        @apply border-b border-gray-200 px-4 py-3 text-left dark:border-gray-700;
+    }
+    .tw-table tfoot tr th,
+    .tw-table thead tr th,
+    .tw-table tbody tr th {
+        @apply font-semibold;
+    }
+    .tw-table tbody tr:last-child td,
+    .tw-table tfoot tr:last-child td,
+    .tw-table tbody tr:last-child th {
+        @apply border-gray-200 dark:border-gray-700;
+    }
+    .table-hover tbody tr:hover td,
+    .table-hover tbody tr:hover th {
+        @apply bg-gray-100 dark:bg-gray-700;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        @apply bg-gray-100 dark:bg-gray-800;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        @apply bg-gray-100;
+    }
+    .table-bordered tbody tr td,
+    .table-bordered tfoot tr th,
+    .table-bordered thead tr th {
+        @apply border border-gray-200 dark:border-gray-700;
+    }
+    .table-responsive {
+        @apply overflow-auto;
+    }
+    .table-rounded {
+        @apply rounded-md border border-gray-200 dark:border-gray-700;
+    }
+    .table-rounded thead tr th {
+        @apply border-t-0;
+    }
+    .table-rounded tbody tr:last-child th,
+    .table-rounded tbody tr:last-child td {
+        @apply border-b-0;
+    }
+    .table-rounded thead tr th:first-child,
+    .table-rounded tbody tr td:first-child {
+        @apply border-l-0;
+    }
+    .table-rounded thead tr th:last-child,
+    .table-rounded tbody tr td:last-child {
+        @apply border-r-0;
+    }
+    .table-header thead {
+        @apply bg-gray-50 dark:bg-neutral-700;
+    }
+}

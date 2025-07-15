@@ -1,0 +1,160 @@
+@layer components {
+    .btn {
+        @apply flex cursor-pointer items-center justify-center gap-0.5 rounded-md border border-gray-200 px-2.5 py-1.5 text-sm font-medium dark:border-gray-700;
+    }
+    .btn-primary {
+        @apply bg-primary shadow-primary-100 hover:bg-primary-700 border-primary text-white;
+        @apply from-primary-400 to-primary-500 dark:bg-primary-600 dark:hover:bg-primary-700 bg-gradient-to-br;
+        @apply hover:from-primary-500 hover:to-primary-600;
+    }
+    .btn-secondary {
+        @apply bg-secondary shadow-secondary-100 border-secondary text-white hover:bg-gray-600;
+        @apply bg-gradient-to-br from-gray-400 to-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700;
+        @apply hover:from-gray-500 hover:to-gray-600;
+    }
+    .btn-success {
+        @apply bg-success shadow-success-100 border-success text-white hover:bg-green-600;
+        @apply bg-gradient-to-br from-green-400 to-green-500 dark:bg-green-600 dark:hover:bg-green-700;
+        @apply hover:from-green-500 hover:to-green-600;
+    }
+    .btn-danger {
+        @apply bg-danger shadow-danger-100 border-danger text-white hover:bg-red-600;
+        @apply bg-gradient-to-br from-red-400 to-red-500 dark:bg-red-600 dark:hover:bg-red-700;
+        @apply hover:from-red-500 hover:to-red-600;
+    }
+    .btn-warning {
+        @apply bg-warning shadow-warning-100 border-warning text-white hover:bg-yellow-600;
+        @apply bg-gradient-to-br from-yellow-400 to-yellow-500 dark:bg-yellow-600 dark:hover:bg-yellow-700;
+        @apply hover:from-yellow-500 hover:to-yellow-600;
+    }
+    .btn-info {
+        @apply bg-info shadow-info-100 hover:bg-info-600 border-info text-white;
+        @apply from-info-400 to-info-500 dark:bg-info-600 dark:hover:bg-info-700 bg-gradient-to-br;
+        @apply hover:from-info-500 hover:to-info-600;
+    }
+    .btn-light {
+        @apply bg-white text-gray-800 hover:bg-gray-50 hover:text-gray-900;
+        @apply dark:bg-gray-800 dark:text-white dark:hover:bg-gray-900 dark:hover:text-gray-200;
+    }
+    .btn-light.danger {
+        @apply text-red-500 hover:text-red-600;
+    }
+    .btn-dark {
+        @apply bg-gray-800 text-white hover:bg-gray-700;
+    }
+    .btn-outline-primary {
+        @apply border-primary text-primary hover:bg-primary border hover:text-white;
+        @apply from-primary-400 to-primary-500 dark:border-primary-600 dark:hover:bg-primary-600 hover:bg-gradient-to-br dark:hover:text-white;
+    }
+    .btn-outline-secondary {
+        @apply border-secondary text-secondary hover:bg-secondary border hover:text-white;
+        @apply from-gray-400 to-gray-500 hover:bg-gradient-to-br dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white;
+    }
+    .btn-outline-success {
+        @apply border-success text-success hover:bg-success border hover:text-white;
+        @apply from-green-400 to-green-500 hover:bg-gradient-to-br dark:border-green-600 dark:hover:bg-green-600 dark:hover:text-white;
+    }
+    .btn-outline-danger {
+        @apply border-danger text-danger hover:bg-danger border hover:text-white;
+        @apply from-red-400 to-red-500 hover:bg-gradient-to-br dark:border-red-600 dark:hover:bg-red-600 dark:hover:text-white;
+    }
+    .btn-outline-warning {
+        @apply border-warning text-warning hover:bg-warning border hover:text-white;
+        @apply from-yellow-400 to-yellow-500 hover:bg-gradient-to-br dark:border-yellow-600 dark:hover:bg-yellow-600 dark:hover:text-white;
+    }
+    .btn-outline-info {
+        @apply border-info text-info hover:bg-info border hover:text-white;
+        @apply from-info-400 to-info-500 dark:border-info-600 dark:hover:bg-info-600 hover:bg-gradient-to-br dark:hover:text-white;
+    }
+    .btn-outline-light {
+        @apply border border-gray-200 text-gray-200 hover:bg-gray-200 hover:text-gray-800;
+        @apply dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-white;
+    }
+    .btn-outline-dark {
+        @apply border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white;
+        @apply dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-white;
+    }
+    .btn-soft-primary {
+        @apply border-primary text-primary hover:bg-primary-100 border;
+        @apply dark:text-primary-100 dark:hover:bg-primary-600;
+    }
+    .btn-soft-secondary {
+        @apply border-secondary text-secondary border hover:bg-gray-100;
+        @apply dark:text-gray-100 dark:hover:bg-gray-600;
+    }
+    .btn-soft-success {
+        @apply border-success text-success hover:bg-success-100 border;
+        @apply dark:text-success-100 dark:hover:bg-success/90;
+    }
+    .btn-soft-danger {
+        @apply border-danger text-danger hover:bg-danger-100 border;
+        @apply dark:text-danger-100 dark:hover:bg-danger/90;
+    }
+    .btn-soft-warning {
+        @apply border-warning text-warning hover:bg-warning-100 border;
+        @apply dark:text-warning-100 dark:hover:bg-warning/90;
+    }
+    .btn-soft-info {
+        @apply border-info text-info hover:bg-info-100 border;
+        @apply dark:text-info-100 dark:hover:bg-info/90;
+    }
+    .btn-soft-light {
+        @apply border border-gray-200 text-gray-200 hover:bg-gray-200;
+        @apply dark:text-gray-200 dark:hover:bg-gray-800;
+    }
+    .btn-soft-dark {
+        @apply border border-gray-800 text-gray-800 hover:bg-gray-800;
+        @apply dark:text-gray-800 dark:hover:bg-gray-900;
+    }
+    .btn-xs {
+        @apply px-2 py-1 text-xs;
+    }
+    .btn-sm {
+        @apply px-2.5 py-1.5 text-xs;
+    }
+    .btn-lg {
+        @apply px-4 py-2 text-lg;
+    }
+    .btn-xl {
+        @apply px-4 py-2 text-2xl;
+    }
+    .btn-block {
+        @apply w-full;
+    }
+    .btn-rounded {
+        @apply rounded-full;
+    }
+    .btn-square {
+        @apply aspect-square rounded-none;
+    }
+    .btn-circle {
+        @apply transition-colors duration-500 ease-in-out active:bg-gray-200;
+        @apply flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-gray-400;
+    }
+    .btn-link {
+        @apply text-primary hover:text-primary-600;
+        @apply dark:text-primary-600 dark:hover:text-primary-700 hover:underline;
+    }
+    .btn-group {
+        @apply inline-flex rounded;
+    }
+    .btn-group .btn:not(:last-child) {
+        @apply rounded-r-none;
+    }
+    .btn-group .btn:not(:first-child) {
+        @apply rounded-l-none;
+    }
+    .btn-group .btn:not(:first-child):not(:last-child) {
+        @apply border-r-0 border-l-0;
+    }
+    .btn-action.btn,
+    .btn-action .btn {
+        @apply p-1.5 text-[10px];
+    }
+    .btn-action:has(.btn-sm) [class*='icon-[mdi-'] {
+        @apply h-4 w-4;
+    }
+    .btn:disabled {
+        @apply cursor-not-allowed opacity-50;
+    }
+}

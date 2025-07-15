@@ -1,0 +1,42 @@
+.datatable-dropdown .datatable-selector {
+    @apply ml-4 min-w-[100px] rounded-md border border-gray-300 bg-white px-4 py-1 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white;
+    @apply focus:border-primary-300 focus:ring-primary-200 border-gray-300 focus:ring;
+}
+
+.datatable-pagination .datatable-pagination-list li a {
+    @apply flex h-9 w-9 items-center justify-center rounded bg-gray-200 font-semibold transition;
+    @apply hover:bg-primary dark:bg-dark dark:hover:bg-primary hover:text-white dark:text-gray-200;
+}
+
+.datatable-pagination .datatable-pagination-list li.active a {
+    @apply bg-primary dark:bg-primary text-white dark:text-gray-200;
+}
+
+.datatable-top {
+    @apply px-0 pt-0;
+}
+.datatable-search .datatable-input {
+    @apply focus:border-primary-300 focus:ring-primary-200 rounded-md border border-gray-300 focus:ring;
+    @apply bg-white px-4 py-1.5 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white;
+}
+
+.sticky-header .datatable-container {
+    @apply h-[500px] overflow-y-auto;
+}
+.sticky-header .datatable-table thead {
+    @apply sticky top-0 z-10;
+}
+.datatable-sorter {
+    @apply w-max pr-7 before:border-t-gray-600 after:border-b-gray-600;
+}
+
+.asc .datatable-sorter {
+    @apply after:border-b-primary after:border-b-[6px] after:opacity-100;
+}
+.desc .datatable-sorter {
+    @apply before:border-t-primary before:border-t-[6px] before:opacity-100;
+}
+
+code {
+    @apply rounded-md bg-gray-100 dark:bg-gray-800;
+}

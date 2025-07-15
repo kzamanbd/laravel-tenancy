@@ -1,0 +1,21 @@
+@layer components {
+    .chat-wrapper {
+        @apply relative flex h-full gap-4 sm:h-[calc(100svh_-_160px)] sm:min-h-0;
+    }
+    .chat-sidebar {
+        @apply absolute inset-0 z-10 hidden w-full max-w-[20rem] flex-none space-y-4 overflow-hidden rounded-l-none p-4 shadow-none lg:inset-auto xl:relative xl:block xl:h-full;
+    }
+    .chat-users {
+        @apply relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pr-3.5 sm:h-[calc(100svh_-_410px)];
+    }
+    .chat-user-item {
+        @apply hover:text-primary dark:hover:text-primary flex w-full items-center justify-between rounded-md p-2 hover:bg-gray-100 dark:hover:bg-[#050b14];
+    }
+    .chat-empty-wrapper {
+        @apply mb-8 h-[calc(100svh_-_320px)] min-h-[120px] w-[280px] text-white md:w-[430px] dark:text-[#0e1726];
+    }
+
+    .chat-conversation-box {
+        @apply min-h-[400px] space-y-5 p-4 pb-[68px] sm:min-h-[300px] sm:pb-0;
+    }
+}

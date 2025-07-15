@@ -1,0 +1,27 @@
+@layer components {
+    .dropdown,
+    .hs-dropdown {
+        @apply relative;
+    }
+    .dropdown-toggle {
+        @apply flex cursor-pointer items-center;
+    }
+    .dropdown-menu {
+        @apply hs-dropdown-open:opacity-100 z-20 hidden rounded-md border border-gray-200 bg-white p-1 opacity-0 shadow-lg transition-[opacity,margin] duration-300 outline-none dark:border-gray-700 dark:bg-gray-800;
+    }
+    .dropdown-item {
+        @apply flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-hidden dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700;
+    }
+    .dropdown-btn {
+        @apply flex w-full items-center gap-2 px-4 py-1 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700;
+    }
+    .dropdown-btn.active {
+        @apply text-primary dark:text-primary;
+    }
+    .list-group-item {
+        @apply border-s border-e border-t border-b-0 border-solid border-inherit px-5 py-[0.65rem];
+    }
+    .tw-tooltip {
+        @apply hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible invisible absolute z-10 inline-block rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-2xs transition-opacity dark:bg-neutral-700;
+    }
+}

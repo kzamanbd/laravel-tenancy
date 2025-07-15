@@ -1,0 +1,26 @@
+@layer components {
+    .breadcrumb {
+        @apply my-4 flex items-center gap-2 md:justify-between print:hidden;
+    }
+    .left-link {
+        @apply flex items-center gap-2;
+    }
+    .breadcrumb-title {
+        @apply hidden text-base md:block md:text-lg;
+    }
+    .left-link .toggle-sidebar {
+        @apply lg:hidden;
+    }
+    .breadcrumb-nav {
+        @apply flex items-center;
+    }
+    .breadcrumb-item {
+        @apply flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white;
+    }
+    .breadcrumb-item:not(:last-child)::after {
+        @apply mr-2 ml-2 inline-block text-gray-400 content-['/'];
+    }
+    .breadcrumb-item.current {
+        @apply text-primary dark:text-primary text-sm font-medium;
+    }
+}

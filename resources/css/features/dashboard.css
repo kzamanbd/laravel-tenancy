@@ -1,0 +1,61 @@
+#visitors-countries #jvm-markers-labels-group {
+    display: none;
+}
+#visitors-countries circle:nth-child(1) {
+    fill: theme(colors.primary.DEFAULT);
+    stroke: theme(colors.primary.300);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(2) {
+    fill: theme(colors.secondary.DEFAULT);
+    stroke: theme(colors.secondary.200);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(3) {
+    fill: theme(colors.danger.DEFAULT);
+    stroke: theme(colors.danger.200);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(4) {
+    fill: theme(colors.info.DEFAULT);
+    stroke: theme(colors.info.200);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(5) {
+    fill: theme(colors.primary.DEFAULT);
+    stroke: theme(colors.primary.300);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(6) {
+    fill: theme(colors.warning.DEFAULT);
+    stroke: theme(colors.warning.200);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(7) {
+    fill: theme(colors.success.DEFAULT);
+    stroke: theme(colors.success.200);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(8) {
+    fill: var(--pink);
+    stroke: theme(colors.danger.300);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(9) {
+    fill: #232323;
+    stroke: rgb(35 35 35 / 0.2);
+    stroke-width: 30;
+}
+#visitors-countries circle:nth-child(10) {
+    fill: var(--indigo);
+    stroke-width: 30;
+    stroke: theme(colors.danger.200);
+}
+#vector-map #jvm-regions-group path,
+#marker-map #jvm-regions-group path,
+#marker-image-map #jvm-regions-group path,
+#lines-map #jvm-regions-group path,
+#visitors-countries #jvm-regions-group path,
+#users-map #jvm-regions-group path {
+    fill: theme(colors.gray.200) !important;
+}

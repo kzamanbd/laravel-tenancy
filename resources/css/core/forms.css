@@ -1,0 +1,75 @@
+@layer components {
+    /* Alert */
+    .alert {
+        @apply rounded border px-5 py-3;
+    }
+    .alert-icon {
+        @apply flex items-center space-x-3;
+    }
+    .alert-dismiss {
+        @apply flex items-center justify-between space-x-3;
+    }
+    .form-group {
+        @apply mb-2;
+    }
+    label,
+    .form-label {
+        @apply relative mb-1.5 block text-sm font-semibold;
+    }
+    .label-required {
+        @apply after:ml-[0.125rem] after:text-red-500 after:content-['*'];
+    }
+    .form-control {
+        @apply focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-200 bg-white text-sm focus:ring dark:border-gray-600 dark:bg-gray-700;
+    }
+    .form-select-sm {
+        @apply py-1.5 text-xs;
+    }
+    .form-check-input {
+        @apply text-primary-600 focus:border-primary-300 focus:ring-primary-200 checked:border-primary-300 border-gray-300 focus:ring focus:ring-offset-0;
+    }
+    .form-check-input[type='checkbox'] {
+        @apply rounded-sm;
+    }
+    .form-check-input[type='radio'] {
+        @apply rounded-full;
+    }
+    .input-group {
+        @apply focus-within:ring-primary-500 flex rounded-md ring-1 ring-gray-200 focus-within:ring-2 dark:ring-gray-600;
+    }
+    .input-group .form-control {
+        @apply border-0 ring-0;
+    }
+    .input-group-prepend {
+        @apply flex items-center justify-center rounded-tl-md rounded-bl-md bg-gray-200 px-3 font-semibold dark:bg-gray-800;
+    }
+    .input-group-append {
+        @apply flex items-center justify-center rounded-tr-md rounded-br-md bg-gray-200 px-3 font-semibold dark:bg-gray-800;
+    }
+    .input-group:has(.input-group-prepend) .form-control {
+        @apply rounded-l-none;
+    }
+    .input-group:has(.input-group-append) .form-control {
+        @apply rounded-r-none;
+    }
+    .form-control.is-invalid {
+        @apply border-red-500 focus:border-red-300 focus:ring focus:ring-red-200;
+    }
+    .form-control.is-valid {
+        @apply border-green-500 focus:border-green-300 focus:ring focus:ring-green-200;
+    }
+    /* form control sm */
+    .form-control-sm {
+        @apply h-8 px-2 text-sm;
+    }
+    /* form control large */
+    .form-control-lg {
+        @apply px-2 text-2xl;
+    }
+    .has-success .form-control {
+        @apply border-success bg-green-100 focus:border-green-300 focus:ring focus:ring-green-200;
+    }
+    .has-error .form-control {
+        @apply border-danger bg-red-100 focus:border-red-300 focus:ring focus:ring-red-200;
+    }
+}

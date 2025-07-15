@@ -1,0 +1,86 @@
+@layer theme {
+    .theme-sky {
+        --color-primary: var(--color-sky-500, #0d68a0);
+        --color-primary-50: var(--color-sky-50, #f0f9ff);
+        --color-primary-100: var(--color-sky-100, #e0f2fe);
+        --color-primary-200: var(--color-sky-200, #bae6fd);
+        --color-primary-300: var(--color-sky-300, #7dd3fc);
+        --color-primary-400: var(--color-sky-400, #38bdf8);
+        --color-primary-500: var(--color-sky-500, #0d68a0);
+        --color-primary-600: var(--color-sky-600, #0a4c8c);
+        --color-primary-700: var(--color-sky-700, #083c6b);
+        --color-primary-800: var(--color-sky-800, #062c4d);
+        --color-primary-900: var(--color-sky-900, #051d33);
+        --color-primary-950: var(--color-sky-950, #020f19);
+    }
+    .theme-rose {
+        --color-primary: var(--color-rose-500, #b91c1c);
+        --color-primary-50: var(--color-rose-50, #fff1f2);
+        --color-primary-100: var(--color-rose-100, #ffe4e6);
+        --color-primary-200: var(--color-rose-200, #fecdd3);
+        --color-primary-300: var(--color-rose-300, #fda4af);
+        --color-primary-400: var(--color-rose-400, #fb7185);
+        --color-primary-500: var(--color-rose-500, #b91c1c);
+        --color-primary-600: var(--color-rose-600, #931b1b);
+        --color-primary-700: var(--color-rose-700, #7f1d1d);
+        --color-primary-800: var(--color-rose-800, #701b1b);
+        --color-primary-900: var(--color-rose-900, #5e1515);
+        --color-primary-950: var(--color-rose-950, #3e0c0c);
+    }
+    .theme-teal {
+        --color-primary: var(--color-teal-500, #047481);
+        --color-primary-50: var(--color-teal-50, #f0fdfa);
+        --color-primary-100: var(--color-teal-100, #ccfbf1);
+        --color-primary-200: var(--color-teal-200, #99f6e4);
+        --color-primary-300: var(--color-teal-300, #5eead4);
+        --color-primary-400: var(--color-teal-400, #2dd4bf);
+        --color-primary-500: var(--color-teal-500, #047481);
+        --color-primary-600: var(--color-teal-600, #036672);
+        --color-primary-700: var(--color-teal-700, #05505c);
+        --color-primary-800: var(--color-teal-800, #014451);
+        --color-primary-900: var(--color-teal-900, #013737);
+        --color-primary-950: var(--color-teal-950, #002428);
+    }
+    .theme-amber {
+        --color-primary: var(--color-amber-500, #b45309);
+        --color-primary-50: var(--color-amber-50, #fffbeb);
+        --color-primary-100: var(--color-amber-100, #fef3c7);
+        --color-primary-200: var(--color-amber-200, #fde68a);
+        --color-primary-300: var(--color-amber-300, #fcd34d);
+        --color-primary-400: var(--color-amber-400, #fbbf24);
+        --color-primary-500: var(--color-amber-500, #b45309);
+        --color-primary-600: var(--color-amber-600, #92400e);
+        --color-primary-700: var(--color-amber-700, #78350f);
+        --color-primary-800: var(--color-amber-800, #64300a);
+        --color-primary-900: var(--color-amber-900, #4e2107);
+        --color-primary-950: var(--color-amber-950, #291105);
+    }
+    .theme-purple {
+        --color-primary: var(--color-purple-500, #7c3aed);
+        --color-primary-50: var(--color-purple-50, #f5f3ff);
+        --color-primary-100: var(--color-purple-100, #ede9fe);
+        --color-primary-200: var(--color-purple-200, #ddd6fe);
+        --color-primary-300: var(--color-purple-300, #c4b5fd);
+        --color-primary-400: var(--color-purple-400, #a78bfa);
+        --color-primary-500: var(--color-purple-500, #7c3aed);
+        --color-primary-600: var(--color-purple-600, #5e2adc);
+        --color-primary-700: var(--color-purple-700, #4c1d95);
+        --color-primary-800: var(--color-purple-800, #381d6f);
+        --color-primary-900: var(--color-purple-900, #2c1a4b);
+        --color-primary-950: var(--color-purple-950, #1a1333);
+    }
+    .theme-cyan {
+        --color-primary: var(--color-cyan-500, #0694a2);
+        --color-primary-50: var(--color-cyan-50, #e0f7f8);
+        --color-primary-100: var(--color-cyan-100, #b2f5ea);
+        --color-primary-200: var(--color-cyan-200, #81e6d9);
+        --color-primary-300: var(--color-cyan-300, #4fd1c5);
+        --color-primary-400: var(--color-cyan-400, #38b2ac);
+        --color-primary-500: var(--color-cyan-500, #0694a2);
+        --color-primary-600: var(--color-cyan-600, #047481);
+        --color-primary-700: var(--color-cyan-700, #036672);
+        --color-primary-800: var(--color-cyan-800, #05505c);
+        --color-primary-900: var(--color-cyan-900, #014451);
+        --color-primary-950: var(--color-cyan-950, #002428);
+    }
+}

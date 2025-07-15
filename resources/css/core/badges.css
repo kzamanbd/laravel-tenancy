@@ -1,0 +1,95 @@
+@layer components {
+    .badge {
+        @apply inline-block rounded bg-gray-600 px-2 py-0.5 text-center text-xs leading-4 font-semibold text-white;
+    }
+    .badge-sm {
+        @apply px-1 py-0.5 text-[10px] leading-3;
+    }
+    .badge-lg {
+        @apply px-3 py-1 text-sm;
+    }
+    .badge-pill {
+        @apply rounded-full;
+    }
+    .badge-square {
+        @apply rounded px-2 py-0.5 text-xs;
+    }
+    .badge-primary {
+        @apply bg-primary text-white;
+    }
+
+    .badge-success {
+        @apply bg-success text-white;
+    }
+
+    .badge-info {
+        @apply bg-info text-white;
+    }
+    .badge-secondary {
+        @apply bg-secondary text-white;
+    }
+    .badge-light {
+        @apply bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200;
+    }
+    .badge-dark {
+        @apply bg-gray-800 text-white dark:bg-gray-600 dark:text-gray-200;
+    }
+
+    .badge-warning {
+        @apply bg-warning text-white;
+    }
+
+    .badge-danger {
+        @apply bg-danger text-white;
+    }
+
+    .badge-outline-primary {
+        @apply border-primary text-primary border bg-transparent;
+    }
+
+    .badge-outline-success {
+        @apply border-success text-success border bg-transparent;
+    }
+
+    .badge-outline-info {
+        @apply border-info text-info border bg-transparent;
+    }
+
+    .badge-outline-warning {
+        @apply border-warning text-warning border bg-transparent;
+    }
+
+    .badge-outline-danger {
+        @apply border-danger text-danger border bg-transparent;
+    }
+    .badge-soft-primary {
+        @apply border-primary-200 bg-primary-100 text-primary dark:bg-primary/20 dark:border-primary-100 border;
+    }
+    .badge-soft-success {
+        @apply border-success-200 bg-success-50 text-success-500 dark:bg-success-500/20 dark:border-success-100 border;
+    }
+    .badge-soft-info {
+        @apply border-info-200 bg-info-50 text-info-500 dark:bg-info-500/20 dark:border-info-100 border;
+    }
+    .badge-soft-warning {
+        @apply border-warning-200 bg-warning-50 text-warning-500 dark:bg-warning-500/20 dark:border-warning-100 border;
+    }
+    .badge-soft-danger {
+        @apply border-danger-200 bg-danger-50 text-danger-500 dark:bg-danger-500/20 dark:border-danger-100 border;
+    }
+    .badge-soft-dark {
+        @apply border border-gray-300 bg-gray-200 text-gray-900 dark:border-gray-400 dark:bg-gray-500/20 dark:text-gray-200;
+    }
+
+    .menu-badge {
+        @apply rounded-lg bg-yellow-400 px-1 py-0.5 text-[10px] leading-3 font-medium text-white;
+    }
+    /* Avatar */
+    .avatar {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 object-cover dark:bg-gray-700;
+    }
+    /* avatar avatar-sm */
+    .avatar-sm {
+        @apply h-8 w-8 text-sm;
+    }
+}

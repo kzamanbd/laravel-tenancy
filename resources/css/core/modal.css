@@ -1,0 +1,78 @@
+@layer components {
+    .tw-modal {
+        @apply pointer-events-none fixed start-0 top-0 z-[80] size-full overflow-x-hidden overflow-y-auto;
+    }
+    .tw-modal-full {
+        @apply p-0;
+    }
+    .tw-modal-dialog {
+        @apply hs-overlay-open:scale-100 hs-overlay-open:opacity-100 m-3 flex scale-95 items-center opacity-0 transition-all duration-200 ease-in-out sm:mx-auto sm:w-full sm:max-w-xl;
+    }
+    .tw-modal-scale {
+        @apply hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95;
+    }
+    .tw-modal-sm {
+        @apply mx-auto max-w-md;
+    }
+    .tw-modal-lg {
+        @apply max-w-3xl;
+    }
+    .tw-modal-full {
+        @apply m-0 h-screen max-w-full;
+    }
+    .tw-modal-full .tw-modal-content {
+        @apply rounded-none;
+    }
+    .tw-modal-centered {
+        @apply flex min-h-[calc(100%-3.5rem)] items-center justify-center;
+    }
+    .tw-modal-content {
+        @apply dark:bg-dark pointer-events-auto relative flex h-full w-full flex-col overflow-hidden rounded-md bg-white shadow-xl;
+    }
+    .tw-modal-header,
+    .tw-modal-body,
+    .tw-modal-footer {
+        @apply px-4 py-3;
+    }
+    .tw-modal-header {
+        @apply flex items-center justify-between border-b dark:border-gray-600;
+    }
+    .tw-modal-close {
+        @apply flex cursor-pointer items-center justify-center gap-0.5 rounded-md border border-gray-200 px-2.5 py-1.5 transition-colors duration-300 ease-in-out;
+        @apply text-sm font-medium dark:border-gray-700;
+        @apply border-transparent p-1 hover:bg-gray-100 dark:hover:bg-gray-700;
+    }
+    .tw-modal-body {
+        @apply flex-grow overflow-auto;
+    }
+    .tw-modal-footer {
+        @apply dark:bg-dark flex items-center justify-end gap-x-2 border-t bg-gray-50 px-4 py-3 dark:border-gray-700;
+    }
+    .hs-overlay-backdrop {
+        @apply hs-overlay-backdrop-open:supports-[backdrop-filter]:bg-gray-700/50 hs-overlay-backdrop-open:supports-[backdrop-filter]:backdrop-blur-sm hs-overlay-backdrop-open:dark:supports-[backdrop-filter]:bg-gray-700/60;
+    }
+    /* drawer */
+    .tw-drawer {
+        @apply hs-overlay-open:translate-x-0 dark:bg-dark pointer-events-none fixed inset-x-0 top-0 right-0 bottom-0 left-auto z-[80] flex size-full max-h-full max-w-full translate-x-full transform flex-col bg-white transition-all duration-300 sm:max-w-sm dark:text-gray-300;
+    }
+    .tw-drawer-left {
+        @apply right-auto left-0 flex -translate-x-full;
+    }
+    .tw-drawer-top {
+        @apply hs-overlay-open:translate-y-0 top-0 right-0 bottom-auto left-0 flex max-h-max min-h-[15rem] max-w-full -translate-y-full flex-col;
+    }
+    .tw-drawer-bottom {
+        @apply hs-overlay-open:translate-y-0 top-auto right-0 left-0 flex max-h-max min-h-[15rem] max-w-full translate-y-full flex-col;
+    }
+    .tw-drawer-header,
+    .tw-drawer-body,
+    .tw-drawer-footer {
+        @apply pointer-events-auto p-4;
+    }
+    .tw-drawer-footer {
+        @apply mt-auto flex items-center justify-end gap-2;
+    }
+    .tw-drawer-header {
+        @apply flex items-center justify-between;
+    }
+}

@@ -1,0 +1,51 @@
+@layer components {
+    .vertical .horizontal-menu,
+    .vertical .horizontal-logo,
+    .collapsible .horizontal-logo,
+    .horizontal .hidden-sidebar {
+        @apply hidden!;
+    }
+    .horizontal .vertical-menu {
+        @apply lg:hidden;
+    }
+    .horizontal .navbar-nav {
+        @apply h-auto;
+    }
+    .horizontal-menu {
+        @apply dark:border-dark dark:bg-dark hidden flex-wrap items-center border-t border-gray-200 bg-white px-6 py-1.5 font-semibold lg:flex lg:gap-1.5 xl:gap-4;
+    }
+    .horizontal-logo {
+        @apply hidden items-center lg:flex;
+    }
+    .horizontal .tw-menu-item,
+    .horizontal .twd--menu-item {
+        @apply relative text-sm;
+    }
+    .horizontal-menu .tw-arrow {
+        @apply flex;
+    }
+    .horizontal-menu .nav-link {
+        @apply hover:bg-primary-100 hover:text-primary flex items-center justify-between rounded-lg px-2 py-2.5 xl:px-4 dark:from-gray-600 dark:to-gray-700 dark:text-gray-400 hover:dark:bg-gray-700 dark:hover:from-gray-600 dark:hover:to-gray-700 dark:hover:text-gray-100;
+    }
+    .horizontal-menu .nav-link.active {
+        @apply bg-primary-100 text-primary dark:bg-gray-700 dark:text-gray-300 dark:hover:text-gray-300;
+    }
+
+    .horizontal-menu .twd--menu {
+        @apply absolute top-full z-20 hidden min-w-[180px] rounded bg-white p-1.5 shadow dark:bg-gray-800;
+    }
+
+    .horizontal-menu .twd--menu-item .twd--link {
+        @apply hover:text-primary flex w-full items-center justify-between rounded-md px-4 py-2 font-normal text-gray-700 hover:bg-gray-100 dark:text-gray-400 hover:dark:bg-gray-700 dark:hover:text-gray-100;
+    }
+    .horizontal-menu .twd--menu .active {
+        @apply text-primary dark:hover:text-primary;
+    }
+    .horizontal-menu > .tw-menu-item:hover > .twd--menu,
+    .horizontal-menu > .tw-menu-item > .twd--menu > .twd--menu-item:hover > .twd--menu {
+        @apply block;
+    }
+    .horizontal-menu > .tw-menu-item > .twd--menu > .twd--menu-item:hover > .twd--menu {
+        @apply top-0 left-full;
+    }
+}
