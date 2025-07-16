@@ -6,6 +6,7 @@ Version: 1.0
 */
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source "../../node_modules/preline/dist/*.js";
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;900&display=swap");
 /* Extra Plugin */
