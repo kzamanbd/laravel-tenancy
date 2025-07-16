@@ -9,7 +9,7 @@
 /**
  * Core Dependencies
  */
-import "preline/preline";
+import "preline";
 import "simplebar";
 
 // You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
