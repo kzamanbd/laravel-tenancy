@@ -176,29 +176,6 @@
                     <li class="user-menu-item">
                         <a href="#" class="user-menu-link"> My Subscription </a>
                     </li>
-                    <li class="user-menu-item group">
-                        <div class="user-menu-link justify-between">
-                            <span>Language</span>
-                            <div class="flex items-center text-xs font-bold">
-                                <img src="/images/flags/united-states.svg" class="mr-2 h-4 w-4 rounded-full"
-                                    alt="English" />
-                                English
-                            </div>
-                            <!-- language dropdown -->
-                            <div class="language-dropdown">
-                                <div class="language-dropdown-item">
-                                    <img src="/images/flags/united-states.svg" class="mr-2 h-4 w-4 rounded-full"
-                                        alt="English" />
-                                    <span class="text-xs leading-none">English</span>
-                                </div>
-                                <div class="language-dropdown-item">
-                                    <img src="/images/flags/france.svg" class="mr-2 h-4 w-4 rounded-full"
-                                        alt="france" />
-                                    <span class="text-xs leading-none">France</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                     <li class="user-menu-item">
                         <form method="POST" action="{{ route('logout') }}" class="w-full">
                             @csrf
