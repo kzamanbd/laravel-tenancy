@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 #[Layout('components.layouts.auth')]
 class Register extends Component
@@ -33,6 +35,12 @@ class Register extends Component
         $this->baseDomain = ! empty($centralDomains) ? $centralDomains[0] : '';
     }
 
+    public function updatedSubdomain(): void
+    {
+        // Ensure subdomain is lowercase
+        $this->subdomain = Str::slug($this->subdomain, '-', 'en');
+    }
+
     /**
      * Handle an incoming registration request.
      */
@@ -40,10 +48,10 @@ class Register extends Component
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
             'subdomain' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:tenants,id'],
-            'baseDomain' => ['required', 'string', 'in:'.implode(',', config('tenancy.central_domains'))],
+            'baseDomain' => ['required', 'string', 'in:' . implode(',', config('tenancy.central_domains'))],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -55,15 +63,16 @@ class Register extends Component
             'name' => $this->name,
         ]);
 
-        $domain = $this->subdomain.'.'.$this->baseDomain;
+        $domain = $this->subdomain . '.' . $this->baseDomain;
         $tenant->createDomain($domain);
         $user->tenants()->attach($tenant);
 
         event(new Registered($user));
         Auth::login($user);
+        Session::regenerate();
 
         // if user browse with https then redirect to https
         $protocol = request()->isSecure() ? 'https://' : 'http://';
-        $this->redirect($protocol.$domain);
+        $this->redirect($protocol . $domain . '/dashboard');
     }
 }

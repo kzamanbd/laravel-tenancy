@@ -375,30 +375,6 @@ const twSelector = (el, multiple = false) => {
         twContent.classList.add("animate__animated", animation);
         saveSettings("animation", animation);
     });
-
-    // Quill editor initialization
-    twSelector(".quill-editor", true).forEach((item) => {
-        const editor = new Quill(item, {
-            theme: "snow",
-            placeholder: "Compose an epic...",
-        });
-        const toolbar = editor.container.previousSibling;
-        const tooltips = {
-            ".ql-picker": "Font Size",
-            "button.ql-bold": "Bold",
-            "button.ql-italic": "Italic",
-            "button.ql-link": "Link",
-            "button.ql-underline": "Underline",
-            "button.ql-clean": "Clear Formatting",
-            "[value=ordered]": "Ordered List",
-            "[value=bullet]": "Bullet List",
-        };
-        for (let selector in tooltips) {
-            const toolbarElement = toolbar.querySelector(selector);
-            if (toolbarElement)
-                toolbarElement.setAttribute("title", tooltips[selector]);
-        }
-    });
 })();
 
 // Create a new MutationObserver instance
