@@ -6,12 +6,10 @@ Version: 1.0
 */
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;900&display=swap");
 /* Extra Plugin */
-@import "./plugins.css";
+@import "simplebar/dist/simplebar.min.css";
 /* Base */
 @import "./tailwind.css";
 @import "./core/themes.css";
@@ -27,9 +25,3 @@ Version: 1.0
 @import "./core/dropdown.css";
 @import "./core/tables.css";
 @import "./core/modal.css";
-/* Features */
-@import "./common-ui.css";
-@import "./features/file-upload.css";
-@import "./features/datatable.css";
-@import "./features/dashboard.css";
-@import "./features/chat-apps.css";
