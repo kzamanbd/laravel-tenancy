@@ -376,14 +376,3 @@ const twSelector = (el, multiple = false) => {
         saveSettings("animation", animation);
     });
 })();
-
-// Create a new MutationObserver instance
-const observer = new MutationObserver(() => {
-    window.HSStaticMethods.autoInit();
-});
-// Start observing the target node
-observer.observe(document.body, {
-    attributes: true,
-    childList: true,
-    subtree: true,
-});
