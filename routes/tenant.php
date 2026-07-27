@@ -2,31 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Routes\SharedRoutes;
-use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
 |--------------------------------------------------------------------------
 |
-| Here you can register the tenant routes for your application.
-| These routes are loaded by the TenantRouteServiceProvider.
-|
-| Feel free to customize them however you want. Good luck!
+| Loaded by the TenancyServiceProvider. The shared app routes (home,
+| dashboard) are registered as universal routes in routes/web.php, so they
+| already resolve on tenant domains. Register tenant-domain-exclusive routes
+| here as your app grows.
 |
 */
-
-Route::middleware([
-    'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
-    // Public routes
-    Route::view('/', 'welcome')->name('home');
-
-    // Shared routes
-    SharedRoutes::register();
-});

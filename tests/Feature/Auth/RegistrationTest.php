@@ -1,25 +1,51 @@
 <?php
 
-use App\Livewire\Auth\Register;
-use Livewire\Livewire;
+use App\Models\Tenant;
+use App\Models\User;
 
 test('registration screen can be rendered', function () {
-    $response = $this->get('/register');
+    $response = $this->get(route('register'));
 
-    $response->assertStatus(200);
+    $response->assertOk();
 });
 
-test('new users can register', function () {
-    $response = Livewire::test(Register::class)
-        ->set('name', 'Test User')
-        ->set('email', 'test@example.com')
-        ->set('password', 'password')
-        ->set('password_confirmation', 'password')
-        ->call('register');
-
-    $response
-        ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+test('new users can register and get their own tenant', function () {
+    $response = $this->post(route('register.store'), [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'subdomain' => 'acme',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
 
     $this->assertAuthenticated();
+
+    $user = User::where('email', 'test@example.com')->first();
+
+    expect($user)->not->toBeNull();
+    expect(Tenant::count())->toBe(1);
+    expect($user->tenants()->count())->toBe(1);
+
+    $baseDomain = config('tenancy.central_domains')[0];
+    $this->assertDatabaseHas('domains', ['domain' => "acme.{$baseDomain}"]);
+
+    $protocol = request()->isSecure() ? 'https' : 'http';
+    $response->assertRedirect("{$protocol}://acme.{$baseDomain}/dashboard");
+});
+
+test('registration requires a unique subdomain', function () {
+    $tenant = Tenant::create(['name' => 'Existing']);
+    $baseDomain = config('tenancy.central_domains')[0];
+    $tenant->createDomain("acme.{$baseDomain}");
+
+    $response = $this->post(route('register.store'), [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'subdomain' => 'acme',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $response->assertSessionHasErrors('subdomain');
+    $this->assertGuest();
 });
