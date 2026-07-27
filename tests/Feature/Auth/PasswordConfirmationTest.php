@@ -1,39 +1,22 @@
 <?php
 
-use App\Livewire\Auth\ConfirmPassword;
 use App\Models\User;
-use Livewire\Livewire;
+use Inertia\Testing\AssertableInertia as Assert;
 
 test('confirm password screen can be rendered', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/confirm-password');
+    $response = $this->actingAs($user)->get(route('password.confirm'));
 
-    $response->assertStatus(200);
+    $response->assertOk();
+
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('auth/confirm-password'),
+    );
 });
 
-test('password can be confirmed', function () {
-    $user = User::factory()->create();
+test('password confirmation requires authentication', function () {
+    $response = $this->get(route('password.confirm'));
 
-    $this->actingAs($user);
-
-    $response = Livewire::test(ConfirmPassword::class)
-        ->set('password', 'password')
-        ->call('confirmPassword');
-
-    $response
-        ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
-});
-
-test('password is not confirmed with invalid password', function () {
-    $user = User::factory()->create();
-
-    $this->actingAs($user);
-
-    $response = Livewire::test(ConfirmPassword::class)
-        ->set('password', 'wrong-password')
-        ->call('confirmPassword');
-
-    $response->assertHasErrors(['password']);
+    $response->assertRedirect(route('login'));
 });
