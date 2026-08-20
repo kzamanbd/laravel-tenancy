@@ -1,13 +1,10 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TextLink from '@/components/text-link';
+import PasswordField from '@/components/password-field';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { slugify } from '@/lib/utils';
+import { cn, slugify } from '@/lib/utils';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
@@ -22,135 +19,127 @@ export default function Register({ passwordRules, baseDomain }: Props) {
     return (
         <>
             <Head title="Register" />
+
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
-                className="flex flex-col gap-6"
+                className="my-3"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="subdomain">Workspace URL</Label>
-                                <Input
-                                    id="subdomain"
-                                    type="text"
-                                    required
-                                    tabIndex={3}
-                                    name="subdomain"
-                                    placeholder="your-company"
-                                    value={subdomain}
-                                    onChange={(event) =>
-                                        setSubdomain(
-                                            slugify(event.target.value, true),
-                                        )
-                                    }
-                                />
-                                <p className="text-sm text-muted-foreground">
-                                    Your workspace will be available at{' '}
-                                    <span className="font-medium text-foreground">
-                                        https://
-                                        {slugify(subdomain) || 'your-company'}.
-                                        {baseDomain}
-                                    </span>
-                                </p>
-                                <InputError message={errors.subdomain} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <PasswordInput
-                                    id="password"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError message={errors.password} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    required
-                                    tabIndex={5}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
-
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={6}
-                                data-test="register-user-button"
-                            >
-                                {processing && <Spinner />}
-                                Create account
-                            </Button>
+                        <div className="block">
+                            <label htmlFor="name" className="form-label label-required">
+                                Name
+                            </label>
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                required
+                                autoFocus
+                                tabIndex={1}
+                                autoComplete="name"
+                                placeholder="Full name"
+                                aria-invalid={!!errors.name}
+                                className={cn('form-control', errors.name && 'is-invalid')}
+                            />
+                            <InputError message={errors.name} />
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink
-                                href={login()}
-                                data-test="login-link"
-                                tabIndex={7}
-                            >
-                                Log in
-                            </TextLink>
+                        <div className="my-2">
+                            <label htmlFor="email" className="form-label label-required">
+                                Email
+                            </label>
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                required
+                                tabIndex={2}
+                                autoComplete="email"
+                                placeholder="Email address"
+                                aria-invalid={!!errors.email}
+                                className={cn('form-control', errors.email && 'is-invalid')}
+                            />
+                            <InputError message={errors.email} />
                         </div>
+
+                        <div className="my-2">
+                            <label htmlFor="subdomain" className="form-label label-required">
+                                Workspace URL
+                            </label>
+                            <input
+                                id="subdomain"
+                                type="text"
+                                name="subdomain"
+                                required
+                                tabIndex={3}
+                                placeholder="your-company"
+                                value={subdomain}
+                                onChange={(event) => setSubdomain(slugify(event.target.value, true))}
+                                aria-invalid={!!errors.subdomain}
+                                aria-describedby="subdomain-help"
+                                className={cn('form-control', errors.subdomain && 'is-invalid')}
+                            />
+                            <p id="subdomain-help" className="help-text mt-1 break-all">
+                                Your status page will live at{' '}
+                                <span className="font-medium text-foreground">
+                                    {slugify(subdomain) || 'your-company'}.{baseDomain}
+                                </span>
+                            </p>
+                            <InputError message={errors.subdomain} />
+                        </div>
+
+                        <PasswordField
+                            id="password"
+                            name="password"
+                            label="Password"
+                            required
+                            tabIndex={4}
+                            autoComplete="new-password"
+                            placeholder="Password"
+                            passwordrules={passwordRules}
+                            error={errors.password}
+                        />
+
+                        <PasswordField
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            label="Confirm password"
+                            required
+                            tabIndex={5}
+                            autoComplete="new-password"
+                            placeholder="Confirm password"
+                            passwordrules={passwordRules}
+                            error={errors.password_confirmation}
+                        />
+
+                        <Button
+                            type="submit"
+                            disabled={processing}
+                            tabIndex={6}
+                            className="mt-4 w-full"
+                            data-test="register-user-button"
+                        >
+                            {processing && <Spinner />}
+                            Create account
+                        </Button>
                     </>
                 )}
             </Form>
+
+            <p className="text-sm">
+                Already have an account?{' '}
+                <Link href={login()} data-test="login-link" className="text-primary hover:underline">
+                    Log in
+                </Link>
+            </p>
         </>
     );
 }
 
 Register.layout = {
     title: 'Create an account',
-    description: 'Enter your details below to create your account',
+    description: 'Enter your details below to create your status page',
 };

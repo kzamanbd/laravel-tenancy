@@ -1,55 +1,40 @@
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
-import * as React from "react"
+import { cn } from '@/lib/utils';
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import type { ComponentProps } from 'react';
 
-import { cn } from "@/lib/utils"
-
-function TooltipProvider({
-  delayDuration = 0,
-  ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
-  return (
-    <TooltipPrimitive.Provider
-      data-slot="tooltip-provider"
-      delayDuration={delayDuration}
-      {...props}
-    />
-  )
+// Place <TooltipProvider> once near the app root (or around a group of tooltips)
+// to share delay/skip-delay timing.
+export function TooltipProvider({ delayDuration = 200, ...props }: ComponentProps<typeof TooltipPrimitive.Provider>) {
+    return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;
 }
 
-function Tooltip({
-  ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-}
+// Root of a single tooltip; supports `open` / `onOpenChange`.
+export const Tooltip = TooltipPrimitive.Root;
+// Element that toggles the tooltip on hover/focus. Defaults to a button; use `asChild`.
+export const TooltipTrigger = TooltipPrimitive.Trigger;
 
-function TooltipTrigger({
-  ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
+// The floating tooltip panel. Portalled to <body>, token-styled, with simple
+// open/closed transitions and an optional arrow.
+export function TooltipContent({
+    className,
+    children,
+    sideOffset = 4,
+    arrow = false,
+    ...props
+}: ComponentProps<typeof TooltipPrimitive.Content> & { arrow?: boolean }) {
+    return (
+        <TooltipPrimitive.Portal>
+            <TooltipPrimitive.Content
+                sideOffset={sideOffset}
+                className={cn(
+                    'z-50 w-fit overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-xs text-popover-foreground shadow-sm',
+                    'origin-(--radix-tooltip-content-transform-origin) transition data-[state=closed]:scale-95 data-[state=closed]:opacity-0 data-[state=delayed-open]:scale-100 data-[state=delayed-open]:opacity-100',
+                    className,
+                )}
+                {...props}>
+                {children}
+                {arrow && <TooltipPrimitive.Arrow className='fill-popover' width={10} height={5} />}
+            </TooltipPrimitive.Content>
+        </TooltipPrimitive.Portal>
+    );
 }
-
-function TooltipContent({
-  className,
-  sideOffset = 4,
-  children,
-  ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content>) {
-  return (
-    <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        data-slot="tooltip-content"
-        sideOffset={sideOffset}
-        className={cn(
-          "bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 max-w-sm rounded-md px-3 py-1.5 text-xs",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <TooltipPrimitive.Arrow className="bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
-      </TooltipPrimitive.Content>
-    </TooltipPrimitive.Portal>
-  )
-}
-
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }

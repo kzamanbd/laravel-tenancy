@@ -1,133 +1,106 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { XIcon } from "lucide-react"
-import * as React from "react"
+import { DialogSectionedContext, useDialogSectioned } from '@/components/ui/dialog-sectioned';
+import { cn } from '@/lib/utils';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import type { ComponentProps } from 'react';
 
-import { cn } from "@/lib/utils"
+// shadcn-style Dialog root. Forwards open-state (`open` / `onOpenChange`).
+export const Dialog = DialogPrimitive.Root;
+export const DialogTrigger = DialogPrimitive.Trigger;
+export const DialogClose = DialogPrimitive.Close;
 
-function Dialog({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+export type DialogContentProps = ComponentProps<typeof DialogPrimitive.Content> & {
+    sectioned?: boolean;
+    centered?: boolean;
+};
+
+/**
+ * shadcn-style centered modal content — Portal + Overlay + Content with focus
+ * trap, Esc-to-close, and a close button.
+ *
+ * `sectioned` switches to the app-modal layout: the content becomes a flex column with
+ * no padding and a capped height, and DialogHeader / DialogBody / DialogFooter pick up
+ * their dividers + padding automatically. Compose those sections instead of repeating
+ * border/padding utilities on every modal.
+ *
+ * Vertical placement: top-aligned by default (the modal sits near the top of the
+ * viewport); pass `centered` to vertically centre it instead.
+ */
+export function DialogContent({ className, children, sectioned, centered, ...props }: DialogContentProps) {
+    return (
+        <DialogPrimitive.Portal>
+            <DialogPrimitive.Overlay className='fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0' />
+            <DialogPrimitive.Content
+                className={cn(
+                    'fixed left-1/2 z-50 w-full max-w-lg -translate-x-1/2 rounded-xl border border-border bg-card text-card-foreground shadow-md duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+                    centered ? 'top-1/2 -translate-y-1/2' : 'top-12',
+                    sectioned ? 'flex max-h-[85dvh] flex-col overflow-hidden' : 'grid gap-4 p-6',
+                    className,
+                )}
+                {...props}>
+                <DialogSectionedContext value={!!sectioned}>{children}</DialogSectionedContext>
+                <DialogPrimitive.Close className='absolute top-4 right-4 rounded-md p-1 text-muted-foreground opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none disabled:pointer-events-none'>
+                    <span className='icon-[mdi--close] size-4' />
+                    <span className='sr-only'>Close</span>
+                </DialogPrimitive.Close>
+            </DialogPrimitive.Content>
+        </DialogPrimitive.Portal>
+    );
 }
 
-function DialogTrigger({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+// Groups the title + description. In a `sectioned` DialogContent it becomes a
+// bordered title bar: fixed-height and vertically centred so the title lines up
+// with the absolute close button (pe-12 keeps the title clear of it).
+export function DialogHeader({ className, ...props }: ComponentProps<'div'>) {
+    const sectioned = useDialogSectioned();
+    return (
+        <div
+            className={cn(
+                sectioned
+                    ? 'flex min-h-16 flex-col justify-center gap-1 border-b border-border px-6 py-3 pe-12 text-left'
+                    : 'flex flex-col gap-1.5 text-center sm:text-left',
+                className,
+            )}
+            {...props}
+        />
+    );
 }
 
-function DialogPortal({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+// Accessible dialog heading (wires aria-labelledby).
+export function DialogTitle({ className, ...props }: ComponentProps<typeof DialogPrimitive.Title>) {
+    return (
+        <DialogPrimitive.Title
+            className={cn('text-lg leading-none font-semibold tracking-tight text-foreground', className)}
+            {...props}
+        />
+    );
 }
 
-function DialogClose({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+// Accessible dialog body text (wires aria-describedby).
+export function DialogDescription({ className, ...props }: ComponentProps<typeof DialogPrimitive.Description>) {
+    return <DialogPrimitive.Description className={cn('text-sm text-muted-foreground', className)} {...props} />;
 }
 
-function DialogOverlay({
-  className,
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return (
-    <DialogPrimitive.Overlay
-      data-slot="dialog-overlay"
-      className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80",
-        className
-      )}
-      {...props}
-    />
-  )
+// Scrollable content region between the header and footer. In a `sectioned`
+// DialogContent it grows to fill the flex column and scrolls when the content
+// exceeds the modal's max height, keeping the header + footer pinned.
+export function DialogBody({ className, ...props }: ComponentProps<'div'>) {
+    const sectioned = useDialogSectioned();
+    return <div className={cn('flex-1 overflow-y-auto', sectioned && 'px-6 py-4', className)} {...props} />;
 }
 
-function DialogContent({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content>) {
-  return (
-    <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay />
-      <DialogPrimitive.Content
-        data-slot="dialog-content"
-        className={cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-          <XIcon />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      </DialogPrimitive.Content>
-    </DialogPortal>
-  )
-}
-
-function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
-      {...props}
-    />
-  )
-}
-
-function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="dialog-footer"
-      className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-function DialogTitle({
-  className,
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Title>) {
-  return (
-    <DialogPrimitive.Title
-      data-slot="dialog-title"
-      className={cn("text-lg leading-none font-semibold", className)}
-      {...props}
-    />
-  )
-}
-
-function DialogDescription({
-  className,
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Description>) {
-  return (
-    <DialogPrimitive.Description
-      data-slot="dialog-description"
-      className={cn("text-muted-foreground text-sm", className)}
-      {...props}
-    />
-  )
-}
-
-export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogPortal,
-  DialogTitle,
-  DialogTrigger,
+// Action row, right-aligned on desktop. In a `sectioned` DialogContent it becomes
+// a bordered, tinted action bar.
+export function DialogFooter({ className, ...props }: ComponentProps<'div'>) {
+    const sectioned = useDialogSectioned();
+    return (
+        <div
+            className={cn(
+                sectioned
+                    ? 'flex items-center justify-end gap-2 border-t border-border bg-muted/40 px-6 py-3'
+                    : 'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end',
+                className,
+            )}
+            {...props}
+        />
+    );
 }

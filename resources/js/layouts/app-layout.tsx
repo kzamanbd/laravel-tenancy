@@ -1,16 +1,10 @@
-import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
-import type { BreadcrumbItem } from '@/types';
+import type { ReactNode } from 'react';
+import DefaultLayout from '@/layouts/default-layout';
 
-export default function AppLayout({
-    breadcrumbs = [],
-    children,
-}: {
-    breadcrumbs?: BreadcrumbItem[];
-    children: React.ReactNode;
-}) {
-    return (
-        <AppLayoutTemplate breadcrumbs={breadcrumbs}>
-            {children}
-        </AppLayoutTemplate>
-    );
+/**
+ * The authenticated shell. Kept as a thin alias so pages keep importing
+ * `@/layouts/app-layout` while the dashboard chrome lives in DefaultLayout.
+ */
+export default function AppLayout({ children }: { children: ReactNode }) {
+    return <DefaultLayout>{children}</DefaultLayout>;
 }

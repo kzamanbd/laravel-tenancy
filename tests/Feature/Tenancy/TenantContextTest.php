@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Enums\SubscriberChannel;
 use App\Models\Component;
 use App\Models\Organization;
+use App\Models\Subscriber;
 use App\Models\Tenant;
 use App\Tenancy\TenantContext;
 use Illuminate\Support\Facades\DB;
@@ -158,4 +160,27 @@ it('re-applies the tenant onto a reconnected handle', function () {
     $this->context->refresh();
 
     expect(Component::count())->toBe(1);
+});
+
+it('defaults a subscriber to the email channel with a confirmation token', function () {
+    actingAsTenant($this->tenantA);
+
+    $subscriber = Subscriber::create(['endpoint' => 'ops@example.com']);
+
+    expect($subscriber->channel)->toBe(SubscriberChannel::Email)
+        ->and($subscriber->confirmation_token)->not->toBeNull()
+        ->and($subscriber->unsubscribe_token)->not->toBeNull()
+        ->and($subscriber->isDeliverable())->toBeFalse();
+});
+
+it('treats a webhook subscriber as deliverable without confirmation', function () {
+    actingAsTenant($this->tenantA);
+
+    $subscriber = Subscriber::create([
+        'channel' => SubscriberChannel::Webhook,
+        'endpoint' => 'https://hooks.example.com/abc',
+    ]);
+
+    expect($subscriber->confirmation_token)->toBeNull()
+        ->and($subscriber->isDeliverable())->toBeTrue();
 });

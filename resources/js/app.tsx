@@ -1,7 +1,9 @@
 import { createInertiaApp } from '@inertiajs/react';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { initializeTheme } from '@/hooks/use-appearance';
+import { NotificationsProvider } from '@/context/notifications-context';
+import { ThemeProvider } from '@/context/theme-context';
+import { UiProvider } from '@/context/ui-context';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
@@ -24,17 +26,22 @@ createInertiaApp({
     },
     strictMode: true,
     withApp(app) {
+        // UiProvider first: ThemeProvider reads the mobile drawer state from it,
+        // and the dashboard chrome reads both.
         return (
-            <TooltipProvider delayDuration={0}>
-                {app}
-                <Toaster />
-            </TooltipProvider>
+            <UiProvider>
+                <ThemeProvider>
+                    <NotificationsProvider>
+                        <TooltipProvider delayDuration={200}>
+                            {app}
+                            <Toaster position="top-right" richColors />
+                        </TooltipProvider>
+                    </NotificationsProvider>
+                </ThemeProvider>
+            </UiProvider>
         );
     },
     progress: {
         color: '#4B5563',
     },
 });
-
-// This will set light / dark mode on load...
-initializeTheme();

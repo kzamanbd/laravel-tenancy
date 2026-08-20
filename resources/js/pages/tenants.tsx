@@ -69,7 +69,7 @@ export default function Tenants({ tenants: list, baseDomain }: Props) {
                                                 placeholder="acme"
                                                 className="rounded-r-none"
                                             />
-                                            <span className="inline-flex h-9 items-center rounded-r-md border border-l-0 border-input bg-muted px-3 text-sm text-muted-foreground">
+                                            <span className="inline-flex h-9 shrink-0 items-center rounded-r-md border border-l-0 border-input bg-muted px-3 text-sm whitespace-nowrap text-muted-foreground">
                                                 .{baseDomain}
                                             </span>
                                         </div>

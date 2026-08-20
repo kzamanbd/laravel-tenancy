@@ -35,13 +35,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = $request->user();
+        $user = $request->user()?->load('tenants.domains');
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $user,
+                // Drives the sidebar's status-page switcher. Central table, so
+                // it reads without a tenant resolved.
+                'tenants' => $user
+                    ? $user->tenants
+                        ->map(fn ($tenant): array => [
+                            'id' => $tenant->getTenantKey(),
+                            'name' => $tenant->name,
+                            'slug' => $tenant->slug,
+                            'domain' => $tenant->domains->first()?->domain,
+                        ])
+                        ->all()
+                    : [],
             ],
             'tenant' => tenant() ? [
                 'id' => tenant('id'),

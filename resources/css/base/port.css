@@ -1,0 +1,156 @@
+/* ===================== PORTED SCOPED STYLES ===================== */
+/* Styles that lived in a Vue SFC `<style scoped>` block. React has no scoped
+   styles, so they live here and are applied by class. */
+
+/* ------------------------- Accordion / Collapsible ------------------------- */
+/* Height animations driven by the Radix content-height CSS vars. */
+
+.accordion-content[data-state='open'] {
+    animation: accordion-down 0.2s ease-out;
+}
+.accordion-content[data-state='closed'] {
+    animation: accordion-up 0.2s ease-out;
+}
+@keyframes accordion-down {
+    from {
+        height: 0;
+    }
+    to {
+        height: var(--radix-accordion-content-height);
+    }
+}
+@keyframes accordion-up {
+    from {
+        height: var(--radix-accordion-content-height);
+    }
+    to {
+        height: 0;
+    }
+}
+
+.collapsible-content[data-state='open'] {
+    animation: collapsible-down 0.2s ease-out;
+}
+.collapsible-content[data-state='closed'] {
+    animation: collapsible-up 0.2s ease-out;
+}
+@keyframes collapsible-down {
+    from {
+        height: 0;
+    }
+    to {
+        height: var(--radix-collapsible-content-height);
+    }
+}
+@keyframes collapsible-up {
+    from {
+        height: var(--radix-collapsible-content-height);
+    }
+    to {
+        height: 0;
+    }
+}
+
+/* --------------------------- ApexCharts skeleton --------------------------- */
+.sk {
+    position: relative;
+    overflow: hidden;
+    background-color: rgb(229 231 235);
+}
+.dark .sk {
+    background-color: rgb(255 255 255 / 0.08);
+}
+.sk::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.6), transparent);
+    animation: sk-shimmer 1.5s infinite;
+}
+.dark .sk::after {
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.07), transparent);
+}
+/* Line/area shimmer: sweep the whole svg via a moving mask of opacity. */
+.sk-line {
+    color: var(--color-primary, #6366f1);
+    animation: sk-pulse 1.6s ease-in-out infinite;
+}
+@keyframes sk-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+@keyframes sk-pulse {
+    0%,
+    100% {
+        opacity: 0.55;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .sk::after,
+    .sk-line {
+        animation: none;
+    }
+}
+
+/* ------------------------------ Quill editor ------------------------------ */
+/* Use design tokens so the editor follows the active theme + dark mode
+   automatically — the token vars remap under `.dark`, so no per-mode rules. */
+.quill-editor .ql-toolbar {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-color: var(--color-border);
+    background-color: var(--color-card);
+}
+.quill-editor .ql-container {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-color: var(--color-border);
+    background-color: var(--color-card);
+    color: var(--color-foreground);
+    font-family: inherit;
+}
+.quill-editor .ql-picker {
+    color: var(--color-foreground);
+}
+.quill-editor .ql-stroke {
+    stroke: var(--color-foreground);
+}
+.quill-editor .ql-fill {
+    fill: var(--color-foreground);
+}
+.quill-editor .ql-picker-options {
+    background-color: var(--color-card);
+    border-color: var(--color-border);
+}
+
+/* ---------------------------- Dashboard greeting --------------------------- */
+.wave {
+    transform-origin: 70% 70%;
+    animation: wave 1.6s ease-in-out infinite;
+}
+@keyframes wave {
+    0%,
+    60%,
+    100% {
+        transform: rotate(0deg);
+    }
+    15% {
+        transform: rotate(14deg);
+    }
+    30% {
+        transform: rotate(-8deg);
+    }
+    45% {
+        transform: rotate(14deg);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .wave {
+        animation: none;
+    }
+}

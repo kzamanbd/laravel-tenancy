@@ -1,0 +1,8 @@
+@import 'simplebar-react/dist/simplebar.min.css';
+
+/* ================================ Others ================================ */
+/* customize simple bar scrollbar color */
+.simplebar-scrollbar:before {
+    width: 4px;
+    background: #e2e8f0;
+}

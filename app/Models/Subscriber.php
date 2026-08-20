@@ -37,6 +37,17 @@ class Subscriber extends Model
     use BelongsToTenant, HasFactory;
 
     /**
+     * Mirrors the column default so the value is present in `creating`, where
+     * the double opt-in decision is made -- a database default would not be
+     * applied until after the insert.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'channel' => 'email',
+    ];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

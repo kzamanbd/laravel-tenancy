@@ -1,0 +1,513 @@
+/* ================================ Base layout ================================ */
+@layer components {
+    .tw--radial-gradient {
+        background: radial-gradient(farthest-corner, var(--color-primary-100), #eaf6ff, #fff9ea, #fafafa, #f5f7f2);
+        background-size: 200% 200%;
+        animation: moveGradient 10s infinite linear alternate;
+        @apply dark:bg-background dark:bg-none;
+    }
+    .help-text {
+        @apply text-xs text-muted-foreground;
+    }
+    .loading {
+        @apply fixed inset-0 z-9999 flex items-center justify-center bg-muted supports-backdrop-filter:bg-card/50 supports-backdrop-filter:backdrop-blur-sm dark:supports-backdrop-filter:bg-card/10;
+    }
+    .tw--wrapper {
+        @apply bg-background text-sm print:bg-transparent;
+    }
+    /* Navbar */
+    .navbar-nav {
+        @apply z-20 flex h-14 items-center justify-between px-3 py-2 transition-[padding,margin] ease-in-out sm:px-6 print:hidden;
+    }
+    .navbar-fixed,
+    .horizontal .navbar-static {
+        @apply sticky top-0;
+    }
+    .horizontal .navbar-static {
+        @apply border-b bg-card supports-backdrop-filter:bg-light/50 supports-backdrop-filter:backdrop-blur dark:bg-card dark:supports-backdrop-filter:bg-card/50;
+    }
+    .tw--wrapper:not(.horizontal) .navbar-fixed.scrollable {
+        @apply mx-3 rounded-br-xl rounded-bl-xl px-4 shadow-md supports-backdrop-filter:bg-light/50 supports-backdrop-filter:backdrop-blur sm:mx-6 dark:supports-backdrop-filter:bg-card/50;
+    }
+    .header-icon {
+        @apply relative flex size-8 items-center justify-center rounded-full bg-card text-muted-foreground hover:bg-muted dark:bg-card dark:hover:bg-accent;
+        @apply data-[state=open]:bg-muted dark:data-[state=open]:bg-accent;
+    }
+    .navbar-hidden {
+        @apply hidden;
+    }
+    .user-avatar {
+        @apply h-8 w-8 rounded-full object-cover;
+    }
+    .user-menu-item {
+        @apply px-1;
+    }
+    .user-menu-link {
+        @apply flex w-full cursor-pointer items-center gap-2 rounded-md p-2 text-sm text-muted-foreground hover:bg-muted dark:text-muted-foreground hover:dark:bg-background dark:hover:text-foreground;
+    }
+    .item-group-divider {
+        @apply my-1.5 border-b;
+    }
+    .tw-bell-icon {
+        @apply absolute -top-1 -right-1 flex h-2 w-2;
+    }
+    .tw-bell-icon.count {
+        @apply size-4;
+    }
+    .tw-badge-dot {
+        @apply relative flex items-center justify-center rounded-full bg-primary-500 text-[10px];
+    }
+    .tw-bell-icon:not(.count) .tw-badge-dot {
+        @apply h-2 w-2;
+    }
+    .tw-bell-icon.count .tw-badge-dot {
+        @apply aspect-square p-1 text-white;
+    }
+    .d-nav {
+        @apply flex flex-wrap text-center text-sm font-medium text-muted-foreground;
+    }
+    .notify-nav-item {
+        @apply inline-flex items-center gap-x-2 text-muted-foreground hover:text-primary focus:text-primary focus:outline-hidden disabled:pointer-events-none disabled:opacity-50 dark:text-muted-foreground dark:hover:text-primary-500;
+    }
+    .tw-nav-item {
+        @apply inline-block rounded-t-lg p-4 py-2 uppercase hover:bg-muted hover:text-muted-foreground dark:hover:bg-accent dark:hover:text-muted-foreground;
+    }
+    .tw-nav-item.active {
+        @apply bg-muted text-blue-600 dark:bg-accent dark:text-blue-500;
+    }
+    /* Footer */
+    .footer {
+        @apply mx-3 flex h-12 items-center rounded-tl-lg rounded-tr-lg border border-b-0 bg-card px-4 py-2 sm:mx-6 md:flex md:items-center md:justify-between md:px-6 md:py-4 dark:bg-card print:hidden;
+    }
+    .footer-fixed {
+        @apply sticky bottom-0 shadow-lg;
+    }
+    .footer-hidden {
+        @apply hidden;
+    }
+    /* customizer */
+    .customizer-icon {
+        @apply size-7 bg-primary text-white shadow-primary-100 hover:bg-primary-700;
+        @apply fixed top-[calc(50%-14px)] z-10 flex cursor-pointer items-center justify-center rounded-md p-1 text-sm text-white ltr:right-3 rtl:left-3 print:hidden;
+    }
+}
+
+/* ================================ Avatar ================================ */
+@layer components {
+    .avatar {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-muted object-cover;
+    }
+    /* avatar avatar-sm */
+    .avatar-sm {
+        @apply h-8 w-8 text-sm;
+    }
+}
+
+/* ================================ CARDS ================================ */
+@layer components {
+    .card {
+        @apply rounded-xl border bg-card shadow-xs dark:bg-card print:border-0;
+    }
+    .card-header {
+        @apply rounded-t-xl border-b border-dashed px-5 py-3 print:border-0;
+    }
+    .card-body {
+        @apply p-5;
+    }
+    .card-footer {
+        @apply rounded-b-xl border-t border-dashed px-5 py-3 print:border-0;
+    }
+    .auth-card {
+        @apply relative z-10 w-full max-w-md;
+    }
+    .auth-card .card-body {
+        @apply rounded-md bg-card px-8 py-6 shadow-md dark:border dark:bg-card dark:text-foreground;
+    }
+}
+
+/* ================================ NAVIGATION ================================ */
+@layer components {
+    .vertical-menu {
+        @apply fixed inset-y-0 z-50 w-64 border-r border-sidebar-border bg-sidebar text-sidebar-foreground print:hidden;
+        @apply transition-[width,translate] duration-300 ease-in-out ltr:-translate-x-full ltr:lg:translate-x-0 rtl:translate-x-0;
+        @apply collapsed-menu:lg:w-17.5 collapsed-menu:lg:translate-x-0;
+    }
+    .vertical-menu.floating {
+        @apply md:inset-y-2 md:left-2 md:rounded-xl md:shadow-sm;
+    }
+    .expanded.vertical-menu {
+        @apply translate-x-0;
+    }
+    /* Mobile overlay: above the navbar (z-20) but below the slide-in sidebar (z-50) */
+    .menu-shadow {
+        @apply fixed inset-0 z-40 bg-gray-900/50 supports-backdrop-filter:backdrop-blur-sm lg:hidden print:hidden;
+    }
+
+    /* Sidebar layout: brand fixed at top, menu scrolls (simplebar), footer pinned at bottom */
+    .vertical-content {
+        @apply flex h-full flex-col;
+    }
+    /* Brand */
+    .tw-brand-logo {
+        @apply relative flex h-14 shrink-0 items-center justify-between border-b border-sidebar-border/60 px-4;
+    }
+    .tw-logo-icon {
+        @apply size-10 object-cover text-primary;
+    }
+    .app-name {
+        @apply mx-2 flex flex-col text-base font-semibold tracking-tight text-sidebar-foreground;
+    }
+
+    /* Section labels */
+    .tw-menu-header {
+        @apply mt-4 mb-1 flex w-full items-center gap-2 px-3 text-[11px] font-bold tracking-widest text-sidebar-foreground uppercase first:mt-2 collapsed-menu:first:hidden;
+    }
+    .vertical-menu .tw-menu-header .minus-icon {
+        @apply hidden;
+    }
+
+    /* Menu list */
+    .vertical-menu .tw-nav-menu {
+        @apply mt-1 space-y-0.5 px-2 pb-3;
+    }
+
+    /* Top-level items */
+    .vertical-menu .tw-menu-link {
+        @apply relative flex w-full items-center gap-2.5 rounded-md! px-2.5! py-2! text-[13px]! font-medium text-sidebar-foreground/80;
+        @apply transition-colors;
+        @apply hover:bg-sidebar-accent! hover:text-sidebar-foreground!;
+    }
+    .vertical-menu .tw-menu-link svg {
+        @apply size-4 shrink-0 text-sidebar-foreground/60;
+    }
+    .vertical-menu .tw-menu-link:hover svg {
+        @apply text-sidebar-foreground;
+    }
+
+    /* Active state — leaf link */
+    .vertical-menu .tw-menu-link.active,
+    .vertical-menu .tw-menu-item.active > .tw-menu-link,
+    .vertical-menu .twd--menu-item.active > .tw-menu-link {
+        @apply bg-primary/10! text-primary!;
+    }
+    .vertical-menu .tw-menu-link.active svg,
+    .vertical-menu .tw-menu-item.active > .tw-menu-link svg,
+    .vertical-menu .twd--menu-item.active > .tw-menu-link svg {
+        @apply text-primary;
+    }
+
+    /* Active state — parent group with active child (subtle, not filled) */
+    .vertical-menu .tw-menu-item.active:has(.twd--link.active) > .tw-menu-link,
+    .vertical-menu .tw-menu-item.active:has([aria-expanded='true']) > .tw-menu-link {
+        @apply bg-transparent! text-primary!;
+    }
+    .vertical-menu .tw-menu-item.active:has(.twd--link.active) > .tw-menu-link svg {
+        @apply text-primary;
+    }
+
+    .tw-link-label {
+        @apply flex flex-1 items-center justify-between gap-2 truncate;
+    }
+
+    /* Subnav (accordion children). The .twd--submenu wrapper animates open/close
+       height via grid-template-rows 0fr→1fr (Vue toggles `.active` on the item,
+       via a pure-CSS accordion); the inner <ul> clips its overflow so the
+       collapsing row hides cleanly. */
+    .vertical-menu .twd--submenu {
+        @apply grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 ease-out;
+    }
+    .vertical-menu .tw-menu-item.active > .twd--submenu,
+    .vertical-menu .twd--menu-item.active > .twd--submenu {
+        @apply grid-rows-[1fr];
+    }
+    .vertical-menu .twd--menu {
+        @apply relative ms-3 mt-0.5 min-h-0 space-y-0.5 overflow-hidden border-s border-sidebar-border/70 ps-3;
+    }
+    .vertical-menu .twd--menu-item {
+        @apply rounded-md text-sm;
+    }
+    .vertical-menu .twd--link {
+        @apply relative flex w-full items-center gap-2 rounded-md! px-2.5! py-1.5! text-[13px] font-normal text-sidebar-foreground/70 transition-colors;
+        @apply hover:bg-sidebar-accent! hover:text-sidebar-foreground!;
+    }
+    .vertical-menu .twd--link.active {
+        @apply bg-primary/10! font-medium text-primary!;
+    }
+
+    /* Disclosure arrow */
+    .vertical-menu .tw-arrow {
+        @apply ms-auto size-4 shrink-0 -rotate-90 text-sidebar-foreground/40 transition-transform duration-200;
+    }
+    .tw-menu-link.active > .tw-arrow,
+    .tw-menu-item.active > .tw-menu-link .tw-arrow,
+    .twd--menu-item.active > .twd--link .tw-arrow {
+        @apply rotate-0;
+    }
+
+    /* Mobile drawer close button (only in-sidebar control; hidden on desktop) */
+    .mini-sidebar {
+        @apply text-sidebar-foreground/70;
+    }
+
+    /* Collapsed (mini-rail) state — a static icon rail; no hover-expand. The
+       single navbar toggle switches between this and the full sidebar. */
+    .collapsed-menu .vertical-menu .tw-menu-header .minus-icon {
+        @apply lg:inline-block;
+    }
+    .collapsed-menu .vertical-menu .app-name {
+        @apply hidden!;
+    }
+    .collapsed-menu .vertical-menu .tw-brand-logo,
+    .collapsed-menu .vertical-menu .tw-menu-link,
+    .collapsed-menu .vertical-menu .tw-menu-header,
+    .collapsed-menu .vertical-menu .footer-menu-icon {
+        @apply justify-center!;
+    }
+    .collapsed-menu .vertical-menu .tw-arrow,
+    .collapsed-menu .vertical-menu .tw-menu-header .minus-label,
+    .collapsed-menu .vertical-menu .tw-nav-menu .tw-link-label,
+    .collapsed-menu .vertical-menu .app-switcher-label {
+        @apply lg:hidden!;
+    }
+    .collapsed-menu .vertical-menu .twd--menu {
+        @apply h-0;
+    }
+
+    /* Footer dropdown (vendor switcher) */
+    .footer-menu-dropdown {
+        @apply mt-auto shrink-0 border-t border-sidebar-border/60 px-3 py-2.5;
+    }
+    .tw-nav-footer-item {
+        @apply inline-flex w-full cursor-pointer items-center gap-2 rounded-md px-2.5 py-2 text-start text-sm transition-colors hover:bg-accent;
+    }
+    .tw-nav-footer-item.active {
+        @apply bg-accent;
+    }
+    .footer-menu-text {
+        @apply block text-xs font-semibold;
+    }
+    .footer-menu-icon {
+        @apply inline-flex w-full! items-center gap-2 rounded-md p-1 text-start transition-colors hover:bg-sidebar-accent;
+    }
+    .app-switcher-label {
+        @apply ms-2 flex w-full items-center justify-between gap-2;
+    }
+
+    body:has(.vertical-menu.expanded) {
+        @apply overflow-hidden;
+    }
+
+    /* Badge / trailing pill inside menu — push to the end */
+    .tw-link-label > span:not(.tw-link-label) {
+        @apply ms-auto;
+    }
+}
+
+/* ================================ HORIZONTAL MENU ================================ */
+@layer components {
+    .vertical-menu {
+        @apply horizontal:lg:hidden;
+    }
+    .navbar-nav {
+        @apply horizontal:mx-0 horizontal:h-auto horizontal:border-b horizontal:bg-card horizontal:px-6 horizontal:transition-none horizontal:dark:bg-card;
+    }
+    .horizontal-menu {
+        @apply hidden flex-wrap items-center lg:flex lg:gap-2 vertical:hidden;
+    }
+    .horizontal .tw-menu-item,
+    .horizontal .twd--menu-item {
+        @apply relative text-sm;
+    }
+    .horizontal-menu .tw-arrow {
+        @apply flex;
+    }
+    .horizontal-menu .nav-link {
+        @apply flex items-center justify-between rounded-md! px-3! py-2! text-sm transition-colors hover:bg-accent hover:text-foreground xl:px-4! dark:text-muted-foreground dark:hover:text-foreground;
+        @apply data-[state=open]:text-primary;
+    }
+    .horizontal-menu .nav-link.active {
+        @apply bg-primary/10 text-primary dark:text-primary;
+    }
+    .horizontal-menu .twd--link {
+        @apply flex w-full items-center justify-between;
+    }
+}
+
+/* Activity Timeline Styles */
+@layer components {
+    .activity-timeline-list {
+        @apply relative flex-1 space-y-6 overflow-y-auto px-4;
+        @apply before:absolute before:top-4 before:bottom-4 before:left-10.5 before:w-0.5 before:bg-muted before:dark:bg-muted-foreground;
+    }
+    .activity-item {
+        @apply relative mb-6 flex gap-3 rounded-lg p-3;
+    }
+    .activity-avatar {
+        @apply relative z-20 shrink-0;
+    }
+    .activity-content {
+        @apply min-w-0 flex-1;
+    }
+    .activity-header {
+        @apply flex items-start justify-between;
+    }
+    /* Scrollbar styling for activity timeline */
+    .activity-timeline-list::-webkit-scrollbar {
+        @apply w-1;
+    }
+    .activity-timeline-list::-webkit-scrollbar-track {
+        @apply bg-muted;
+    }
+    .activity-timeline-list::-webkit-scrollbar-thumb {
+        @apply rounded-full bg-secondary;
+    }
+    .activity-timeline-list::-webkit-scrollbar-thumb:hover {
+        @apply bg-muted-foreground;
+    }
+    .activity-avatar > div {
+        @apply shadow-sm transition-all duration-200;
+    }
+    .activity-item:hover .activity-avatar > div {
+        @apply scale-105 shadow-md;
+    }
+    .upcoming-events-list li {
+        @apply relative mb-6;
+    }
+    .timeline-widget {
+        @apply relative before:absolute before:top-0 before:left-12 before:h-full before:w-0.5 before:bg-muted dark:before:bg-black/20;
+    }
+    .timeline-widget .timeline-widget-list {
+        @apply relative mb-6 before:absolute before:top-0 before:left-11 before:h-3 before:w-3 before:rounded-full before:border before:bg-muted;
+    }
+    .timeline-widget .timeline-widget-list:last-child {
+        @apply mb-0;
+    }
+    .timeline-widget .timeline-widget-list .timeline-widget-content {
+        @apply max-w-xs;
+    }
+}
+/* ================================ Tables ================================ */
+@layer components {
+    .tw-table {
+        @apply w-full border-collapse text-sm;
+    }
+    .tw-table thead tr th,
+    .tw-table tbody tr th,
+    .tw-table tbody tr td,
+    .tw-table tfoot tr th,
+    .tw-table tfoot tr td {
+        @apply border-b px-4 py-3 text-left;
+    }
+    .tw-table tfoot tr th,
+    .tw-table thead tr th,
+    .tw-table tbody tr th {
+        @apply font-semibold;
+    }
+    .table-hover tbody tr:hover td,
+    .table-hover tbody tr:hover th {
+        @apply bg-muted dark:bg-background;
+    }
+    .table-bordered tbody tr td,
+    .table-bordered tfoot tr th,
+    .table-bordered thead tr th {
+        @apply border;
+    }
+    .table-responsive {
+        @apply overflow-auto;
+    }
+    /* Mobile horizontal-scroll affordance: fade the right edge so off-screen
+       columns read as "scroll for more". The mask is painted on the container
+       box (not the scrolled content) so it stays pinned to the visible edge;
+       it affects paint only → no layout shift, and fades to transparent so it
+       is theme-agnostic (no color to keep in sync with light/dark). */
+    @media (max-width: 640px) {
+        .table-responsive {
+            -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent);
+            mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent);
+        }
+    }
+    .table-rounded {
+        @apply rounded-md border;
+    }
+    .table-rounded thead tr th {
+        @apply border-t-0;
+    }
+    .table-rounded tbody tr:last-child th,
+    .table-rounded tbody tr:last-child td {
+        @apply border-b-0;
+    }
+    .table-rounded thead tr th:first-child,
+    .table-rounded tbody tr td:first-child {
+        @apply border-l-0;
+    }
+    .table-rounded thead tr th:last-child,
+    .table-rounded tbody tr td:last-child {
+        @apply border-r-0;
+    }
+}
+
+/* ================================ Forms ================================ */
+@layer components {
+    .form-group {
+        @apply mb-2;
+    }
+    .form-label,
+    label:has(+ .form-control),
+    label:has(+ .input-group) {
+        @apply relative mb-1.5 block text-sm font-medium text-foreground dark:text-muted-foreground;
+    }
+    .label-required {
+        @apply after:ml-0.5 after:text-red-500 after:content-['*'];
+    }
+    .form-control {
+        @apply block w-full rounded-md border-border bg-card text-sm focus:border-primary-500 focus:ring focus:ring-primary-500 dark:border-border dark:bg-card;
+    }
+    .form-check-input {
+        @apply shrink-0 rounded-sm border-border bg-card text-primary-600 checked:border-primary-300 focus:border-primary-300 focus:ring focus:ring-primary-500 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 dark:border-border dark:bg-card dark:checked:border-primary-500 dark:checked:bg-primary-500 dark:focus:ring-offset-background;
+    }
+    .form-check-input[type='checkbox'] {
+        @apply rounded-sm;
+    }
+    .form-check-input[type='radio'] {
+        @apply rounded-full text-primary-600 checked:border-primary-500 focus:ring-primary-500 disabled:pointer-events-none disabled:opacity-50 dark:bg-card dark:checked:border-primary-500 dark:checked:bg-primary-500 dark:focus:ring-offset-card;
+    }
+    .input-group {
+        @apply flex rounded-md bg-card ring-1 ring-border focus-within:ring-2 focus-within:ring-primary-500 dark:bg-card dark:ring-border;
+    }
+    .input-group .form-control {
+        @apply border-0 ring-0;
+    }
+    .input-group-prepend {
+        @apply flex items-center justify-center rounded-tl-md rounded-bl-md bg-muted px-3 dark:bg-background;
+    }
+    .input-group-append {
+        @apply flex items-center justify-center rounded-tr-md rounded-br-md bg-muted px-3 dark:bg-background;
+    }
+    .input-group:has(.input-group-prepend) .form-control {
+        @apply rounded-l-none;
+    }
+    .input-group:has(.input-group-append) .form-control {
+        @apply rounded-r-none;
+    }
+    .form-control.is-invalid {
+        @apply border-danger focus:border-danger focus:ring focus:ring-danger/20;
+    }
+    /* form control sm */
+    .form-control-sm {
+        @apply h-8 px-2 text-xs;
+    }
+    /* form control large */
+    .form-control-lg {
+        @apply px-2 text-2xl;
+    }
+}
+
+/* ================================ DROPDOWN ================================ */
+@layer components {
+    .dropdown-item {
+        @apply flex w-full cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted focus:bg-muted focus:outline-hidden dark:text-muted-foreground dark:hover:bg-background dark:hover:text-muted-foreground;
+    }
+    .list-group-item {
+        @apply border-s border-e border-t border-b-0 border-solid border-inherit px-5 py-[0.65rem];
+    }
+}

@@ -1,33 +1,42 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+        {{-- Apply the persisted theme before first paint. Reads the same
+             `themeConfig` cookie that the ThemeProvider owns, so the server
+             render, this script, and React all agree and nothing flashes. --}}
         <script>
-            (function() {
-                const appearance = '{{ $appearance ?? "system" }}';
+            (function () {
+                var settings = { theme: 'system', themeVariant: 'default', rtlClass: 'ltr' };
 
-                if (appearance === 'system') {
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                try {
+                    var raw = document.cookie
+                        .split('; ')
+                        .find(function (row) { return row.indexOf('themeConfig=') === 0; });
 
-                    if (prefersDark) {
-                        document.documentElement.classList.add('dark');
+                    if (raw) {
+                        Object.assign(settings, JSON.parse(decodeURIComponent(raw.slice('themeConfig='.length))));
                     }
+                } catch (e) {
+                    // Malformed cookie: fall through to the defaults above.
                 }
+
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var isDark = settings.theme === 'dark' || (settings.theme === 'system' && prefersDark);
+
+                var el = document.documentElement;
+                el.classList.add(isDark ? 'dark' : 'light');
+                el.classList.add('theme-' + (settings.themeVariant || 'default'));
+                el.dir = settings.rtlClass || 'ltr';
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
+        {{-- Matches --background in resources/css/base/tailwind.css. --}}
         <style>
-            html {
-                background-color: oklch(1 0 0);
-            }
-
-            html.dark {
-                background-color: oklch(0.145 0 0);
-            }
+            html { background-color: oklch(0.99 0 0); }
+            html.dark { background-color: oklch(0 0 0); }
         </style>
 
         <link rel="icon" href="/favicon.ico" sizes="any">
