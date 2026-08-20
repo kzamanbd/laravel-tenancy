@@ -52,6 +52,11 @@ export const workspaceMenu = (tenantId: number): MenuNode[] => [
         to: `/workspaces/${tenantId}/maintenance`,
     },
     {
+        label: 'Domains',
+        icon: 'icon-[mdi--web]',
+        to: `/workspaces/${tenantId}/domains`,
+    },
+    {
         label: 'Page settings',
         icon: 'icon-[mdi--palette-outline]',
         to: `/workspaces/${tenantId}/settings`,

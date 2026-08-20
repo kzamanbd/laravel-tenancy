@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Dns\DnsResolver;
+use App\Services\Dns\SystemDnsResolver;
 use App\Tenancy\TenantContext;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
@@ -19,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
         // One instance per request, because the Row-Level Security session
         // variables it manages live on the database connection.
         $this->app->singleton(TenantContext::class);
+
+        // Swapped for a fake in tests so ownership rules can be exercised
+        // without a network round trip.
+        $this->app->bind(DnsResolver::class, SystemDnsResolver::class);
     }
 
     /**

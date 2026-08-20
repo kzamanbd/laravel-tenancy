@@ -38,6 +38,19 @@ class Domain extends BaseDomain
     use HasFactory;
 
     /**
+     * Mirrors the column default. Without it a freshly created domain holds a
+     * null status until it is reloaded, and `mayIssueCertificate()` -- the
+     * check standing between this platform and issuing certificates for
+     * hostnames nobody proved -- throws instead of answering false.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'verification_status' => 'pending',
+        'is_primary' => false,
+    ];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
@@ -57,7 +70,16 @@ class Domain extends BaseDomain
         static::creating(function (self $domain): void {
             if ($domain->isCustom()) {
                 $domain->verification_token ??= 'status-verify-'.Str::random(32);
+
+                return;
             }
+
+            // A subdomain of our own central domain resolves through DNS we
+            // already control, so there is nothing for a customer to prove --
+            // and leaving it pending would make the TLS gate refuse a
+            // certificate for the platform's own hostname.
+            $domain->verification_status = DomainVerificationStatus::Verified;
+            $domain->verified_at ??= now();
         });
     }
 

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Actions\BuildStatusPageSnapshot;
+use App\Enums\DomainVerificationStatus;
+use App\Models\Domain;
 use App\Models\Tenant;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -43,6 +45,8 @@ class StatusPagePublisher
         $disk->put("{$prefix}/status.json", $json);
         $disk->put("{$prefix}/index.html", $html);
 
+        $this->syncHostPointers($tenant);
+
         $tenant->forceFill(['last_published_at' => now()])->save();
 
         return [
@@ -58,7 +62,72 @@ class StatusPagePublisher
      */
     public function unpublish(Tenant $tenant): void
     {
+        foreach ($this->currentHostPointers($tenant) as $hostname) {
+            $this->disk()->delete(self::hostPointerFor($hostname));
+        }
+
         $this->disk()->deleteDirectory(self::pathFor($tenant));
+    }
+
+    /**
+     * Writes a hostname -> tenant pointer for every verified domain.
+     *
+     * This is what lets a request arriving on a customer's own hostname find
+     * its page without a database lookup. Resolving the host through the
+     * `domains` table would work, and would also quietly reintroduce the
+     * dependency the whole pipeline exists to remove.
+     *
+     * Pointers for hostnames that are no longer verified are deleted, so a
+     * removed domain stops resolving here rather than serving a page its owner
+     * no longer controls.
+     */
+    private function syncHostPointers(Tenant $tenant): void
+    {
+        $disk = $this->disk();
+
+        $verified = Domain::query()
+            ->where('tenant_id', $tenant->getTenantKey())
+            ->where('verification_status', DomainVerificationStatus::Verified)
+            ->pluck('domain')
+            ->map(fn (string $domain): string => strtolower($domain))
+            ->values()
+            ->all();
+
+        foreach (array_diff($this->currentHostPointers($tenant), $verified) as $stale) {
+            $disk->delete(self::hostPointerFor($stale));
+        }
+
+        foreach ($verified as $hostname) {
+            $disk->put(self::hostPointerFor($hostname), (string) $tenant->getTenantKey());
+        }
+
+        $disk->put(self::pathFor($tenant).'/hosts.json', json_encode($verified, JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function currentHostPointers(Tenant $tenant): array
+    {
+        $path = self::pathFor($tenant).'/hosts.json';
+        $disk = $this->disk();
+
+        if (! $disk->exists($path)) {
+            return [];
+        }
+
+        try {
+            $hosts = json_decode($disk->get($path), true, flags: JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return [];
+        }
+
+        return is_array($hosts) ? array_values(array_filter($hosts, 'is_string')) : [];
+    }
+
+    public static function hostPointerFor(string $hostname): string
+    {
+        return 'hosts/'.strtolower($hostname);
     }
 
     public function snapshotFor(Tenant $tenant): array

@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\Workspace\ComponentController;
+use App\Http\Controllers\Workspace\DomainController;
 use App\Http\Controllers\Workspace\IncidentController;
 use App\Http\Controllers\Workspace\IncidentUpdateController;
 use App\Http\Controllers\Workspace\MaintenanceController;
@@ -71,6 +72,12 @@ foreach (config('tenancy.central_domains') as $domain) {
                 ->name('incidents.updates.publish');
             Route::delete('incidents/{incident}/updates/{update}', [IncidentUpdateController::class, 'destroy'])
                 ->name('incidents.updates.destroy');
+
+            Route::get('domains', [DomainController::class, 'index'])->name('domains.index');
+            Route::post('domains', [DomainController::class, 'store'])->name('domains.store');
+            Route::post('domains/{domain}/verify', [DomainController::class, 'verify'])->name('domains.verify');
+            Route::post('domains/{domain}/primary', [DomainController::class, 'makePrimary'])->name('domains.primary');
+            Route::delete('domains/{domain}', [DomainController::class, 'destroy'])->name('domains.destroy');
 
             Route::get('settings', [PageSettingsController::class, 'edit'])->name('settings.edit');
             Route::put('settings', [PageSettingsController::class, 'update'])->name('settings.update');

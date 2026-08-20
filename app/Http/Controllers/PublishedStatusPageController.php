@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Services\StatusPagePublisher;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,6 +32,36 @@ class PublishedStatusPageController extends Controller
     public function json(string $tenant): Response
     {
         return $this->serve($tenant, 'status.json', 'application/json');
+    }
+
+    /**
+     * Serve whichever page is bound to the requesting hostname.
+     *
+     * The edge rewrites a request for a customer's own domain to this path and
+     * forwards the original Host, which is resolved through a pointer file
+     * written at publish time -- deliberately not through the `domains` table,
+     * which would put a query back on the path that must not have one.
+     */
+    public function byHost(Request $request): Response
+    {
+        return $this->serve($this->tenantForHost($request), 'index.html', 'text/html; charset=UTF-8');
+    }
+
+    public function byHostJson(Request $request): Response
+    {
+        return $this->serve($this->tenantForHost($request), 'status.json', 'application/json');
+    }
+
+    private function tenantForHost(Request $request): string
+    {
+        // getHost() honours the trusted-proxy configuration, so a forwarded
+        // host is only believed when it comes from the edge.
+        $pointer = StatusPagePublisher::hostPointerFor($request->getHost());
+        $disk = Storage::disk('status_pages');
+
+        abort_unless($disk->exists($pointer), 404);
+
+        return trim($disk->get($pointer));
     }
 
     private function serve(string $tenant, string $file, string $contentType): Response
