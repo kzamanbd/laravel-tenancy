@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Tenant;
+use App\Tenancy\TenantContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,7 +46,41 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Provision fixtures with Row-Level Security suspended.
+ *
+ * Test setup is inherently cross-tenant: it seeds rows for tenant A and
+ * tenant B before either is "logged in". That is exactly the privileged
+ * position the escape hatch exists for, and routing setup through it keeps
+ * the assertions themselves running under real policy enforcement.
+ *
+ * @template TReturn
+ *
+ * @param  callable(): TReturn  $callback
+ * @return TReturn
+ */
+function asSuperAdmin(callable $callback): mixed
 {
-    // ..
+    return app(TenantContext::class)->withoutIsolation($callback);
+}
+
+/**
+ * Bind the connection to a tenant for the remainder of the test, the same way
+ * a request arriving on that tenant's domain would.
+ */
+function actingAsTenant(Tenant $tenant): Tenant
+{
+    tenancy()->initialize($tenant);
+
+    return $tenant;
+}
+
+/**
+ * Drop back to the central context, where no tenant-scoped row is visible.
+ */
+function actingAsCentralDomain(): void
+{
+    tenancy()->end();
+
+    app(TenantContext::class)->forget();
 }

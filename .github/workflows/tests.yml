@@ -1,0 +1,66 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, pgsql, mbstring, bcmath
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      # The isolation guarantee depends on the application connecting as a role
+      # that cannot ignore Row-Level Security. A superuser -- which is what the
+      # Postgres image hands out by default -- would sail past every policy and
+      # make the leak suite pass against an unprotected database.
+      - name: Create the non-bypassing application role
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE status_app LOGIN PASSWORD 'status_app'
+            NOSUPERUSER NOBYPASSRLS NOCREATEROLE CREATEDB;
+          CREATE DATABASE laravel_tenancy_test OWNER status_app;
+          SQL
+
+      - name: Prepare application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Check formatting
+        run: vendor/bin/pint --test
+
+      # Runs first and on its own so a tenant isolation regression is
+      # unmistakable in the log rather than buried among unrelated failures.
+      - name: Tenant isolation suite
+        run: php artisan test --compact tests/Feature/Tenancy
+
+      - name: Test suite
+        run: php artisan test --compact
