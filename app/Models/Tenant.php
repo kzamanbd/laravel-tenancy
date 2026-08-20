@@ -26,6 +26,14 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string|null $name
  * @property string|null $slug
  * @property Carbon|null $published_at
+ * @property string|null $headline
+ * @property string|null $support_url
+ * @property string|null $logo_path
+ * @property string $primary_color
+ * @property string|null $custom_css
+ * @property string $timezone
+ * @property bool $show_powered_by
+ * @property Carbon|null $last_published_at
  */
 class Tenant extends BaseTenant
 {
@@ -46,8 +54,29 @@ class Tenant extends BaseTenant
             'name',
             'slug',
             'published_at',
+            'headline',
+            'support_url',
+            'logo_path',
+            'primary_color',
+            'custom_css',
+            'timezone',
+            'show_powered_by',
+            'last_published_at',
         ];
     }
+
+    /**
+     * Mirrors the column defaults so a freshly created tenant carries them in
+     * memory. A database default is not applied until after the insert, and the
+     * publisher reads these straight off the model.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'primary_color' => '#4f46e5',
+        'timezone' => 'UTC',
+        'show_powered_by' => true,
+    ];
 
     /**
      * @return array<string, string>
@@ -56,6 +85,8 @@ class Tenant extends BaseTenant
     {
         return [
             'published_at' => 'datetime',
+            'last_published_at' => 'datetime',
+            'show_powered_by' => 'boolean',
         ];
     }
 

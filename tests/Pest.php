@@ -3,6 +3,7 @@
 use App\Models\Tenant;
 use App\Tenancy\TenantContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /*
@@ -18,6 +19,10 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
+    // Saving a component or incident queues a republish, and the test queue
+    // runs synchronously -- so without this, every feature test that touches
+    // those models renders a real status page onto the developer's disk.
+    ->beforeEach(fn () => Storage::fake('status_pages'))
     ->in('Feature');
 
 /*

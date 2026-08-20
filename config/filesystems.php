@@ -47,6 +47,33 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Published status pages.
+         *
+         * Deliberately absent from `tenancy.filesystem.disks`: that bootstrapper
+         * rewrites a disk's root per tenant, and these paths are addressed
+         * explicitly by tenant so the publisher behaves identically inside a
+         * tenant context, in a queue worker, and from the console.
+         *
+         * In production this should point at object storage on a *different*
+         * provider and region than the application, so a status page survives
+         * the outage it is reporting.
+         */
+        'status_pages' => [
+            'driver' => env('STATUS_PAGE_DISK_DRIVER', 'local'),
+            'root' => storage_path('app/status-pages'),
+            'url' => env('STATUS_PAGE_URL'),
+            'visibility' => 'public',
+            'key' => env('STATUS_PAGE_ACCESS_KEY_ID'),
+            'secret' => env('STATUS_PAGE_SECRET_ACCESS_KEY'),
+            'region' => env('STATUS_PAGE_REGION'),
+            'bucket' => env('STATUS_PAGE_BUCKET'),
+            'endpoint' => env('STATUS_PAGE_ENDPOINT'),
+            'use_path_style_endpoint' => env('STATUS_PAGE_USE_PATH_STYLE', false),
+            'throw' => true,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

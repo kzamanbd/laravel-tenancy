@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ComponentStatus;
 use App\Models\Concerns\BelongsToTenant;
+use App\Models\Concerns\TriggersStatusPagePublish;
 use Database\Factories\ComponentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +34,7 @@ use Illuminate\Support\Carbon;
 class Component extends Model
 {
     /** @use HasFactory<ComponentFactory> */
-    use BelongsToTenant, HasFactory;
+    use BelongsToTenant, HasFactory, TriggersStatusPagePublish;
 
     /**
      * @return array<string, string>

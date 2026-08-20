@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\IncidentStatus;
 use App\Models\Concerns\BelongsToTenant;
+use App\Models\Concerns\TriggersStatusPagePublish;
 use Database\Factories\IncidentUpdateFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +34,7 @@ use Illuminate\Support\Carbon;
 class IncidentUpdate extends Model
 {
     /** @use HasFactory<IncidentUpdateFactory> */
-    use BelongsToTenant, HasFactory;
+    use BelongsToTenant, HasFactory, TriggersStatusPagePublish;
 
     /**
      * @return array<string, string>

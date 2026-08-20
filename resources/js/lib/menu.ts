@@ -51,6 +51,11 @@ export const workspaceMenu = (tenantId: number): MenuNode[] => [
         icon: 'icon-[mdi--calendar-clock-outline]',
         to: `/workspaces/${tenantId}/maintenance`,
     },
+    {
+        label: 'Page settings',
+        icon: 'icon-[mdi--palette-outline]',
+        to: `/workspaces/${tenantId}/settings`,
+    },
 ];
 
 export const menu: MenuNode[] = [

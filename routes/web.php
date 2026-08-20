@@ -6,6 +6,7 @@ use App\Http\Controllers\Workspace\ComponentController;
 use App\Http\Controllers\Workspace\IncidentController;
 use App\Http\Controllers\Workspace\IncidentUpdateController;
 use App\Http\Controllers\Workspace\MaintenanceController;
+use App\Http\Controllers\Workspace\PageSettingsController;
 use App\Http\Middleware\EnsureUserBelongsToTenant;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -70,6 +71,10 @@ foreach (config('tenancy.central_domains') as $domain) {
                 ->name('incidents.updates.publish');
             Route::delete('incidents/{incident}/updates/{update}', [IncidentUpdateController::class, 'destroy'])
                 ->name('incidents.updates.destroy');
+
+            Route::get('settings', [PageSettingsController::class, 'edit'])->name('settings.edit');
+            Route::put('settings', [PageSettingsController::class, 'update'])->name('settings.update');
+            Route::post('publish', [PageSettingsController::class, 'publish'])->name('publish');
 
             Route::get('maintenance', [MaintenanceController::class, 'index'])->name('maintenance.index');
             Route::post('maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
