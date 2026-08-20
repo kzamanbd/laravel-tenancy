@@ -1,4 +1,4 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { index as tenants, store } from '@/routes/tenants';
+import { index as workspaceComponents } from '@/routes/workspace/components';
 
 type Tenant = {
     id: string;
@@ -126,7 +127,12 @@ export default function Tenants({ tenants: list, baseDomain }: Props) {
                                                 className="border-b last:border-0"
                                             >
                                                 <td className="px-4 py-3 font-medium">
-                                                    {tenant.name ?? tenant.id}
+                                                    <Link
+                                                        href={workspaceComponents({ tenant: tenant.id })}
+                                                        className="hover:underline"
+                                                    >
+                                                        {tenant.name ?? tenant.id}
+                                                    </Link>
                                                 </td>
                                                 <td className="px-4 py-3 text-muted-foreground">
                                                     {tenant.users

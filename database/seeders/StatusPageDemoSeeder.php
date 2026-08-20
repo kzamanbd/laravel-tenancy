@@ -113,6 +113,7 @@ class StatusPageDemoSeeder extends Seeder
             'slug' => Str::slug($slug.'-failover-rehearsal'),
             'description' => 'Brief connection resets while we exercise the standby.',
             'status' => MaintenanceStatus::Scheduled,
+            'is_published' => true,
             'scheduled_start_at' => now()->addDays(3),
             'scheduled_end_at' => now()->addDays(3)->addHours(2),
         ]);

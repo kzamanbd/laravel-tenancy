@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 import { useLocation } from '@/hooks/use-router';
 import { menu  } from '@/lib/menu';
@@ -28,6 +29,7 @@ const linkablePaths = new Set(collectPaths(menu));
 
 export const useBreadcrumbs = () => {
     const { pathname } = useLocation();
+    const { tenant } = usePage<{ tenant: { id: number; name: string | null } | null }>().props;
 
     return useMemo(() => {
         const segments = pathname.split('/').filter((segment) => segment !== '');
@@ -36,9 +38,14 @@ export const useBreadcrumbs = () => {
             const path = '/' + segments.slice(0, index + 1).join('/');
             const isLast = index === segments.length - 1;
 
-            const title = segment
-                .replace(/[-_]/g, ' ')
-                .replace(/\b\w/g, (char) => char.toUpperCase());
+            // Raw ids read as noise in a trail. The tenant segment becomes the
+            // page's name; any other id is shown as a reference rather than a
+            // bare number.
+            const title = /^\d+$/.test(segment)
+                ? segments[index - 1] === 'workspaces'
+                    ? (tenant?.name ?? `Workspace ${segment}`)
+                    : `#${segment}`
+                : segment.replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 
             return {
                 title,
@@ -51,5 +58,5 @@ export const useBreadcrumbs = () => {
         const homeCrumb: Crumb = { title: 'Home', to: '/', disabled: true, link: false };
 
         return crumbs.length > 0 ? crumbs : [homeCrumb];
-    }, [pathname]);
+    }, [pathname, tenant]);
 };

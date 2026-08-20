@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MembershipRole;
+use App\Models\Membership;
 use App\Models\Tenant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,9 +51,20 @@ class TenantController extends Controller
         $subdomain = Str::slug($validated['subdomain']);
         $domain = $subdomain.'.'.config('tenancy.central_domains')[0];
 
-        DB::transaction(function () use ($validated, $domain) {
+        DB::transaction(function () use ($request, $validated, $domain) {
             $tenant = Tenant::create(['name' => $validated['name']]);
             $tenant->createDomain($domain);
+
+            // Without this the creator cannot reach the page they just made:
+            // workspace routes are gated on membership, and the dashboard lists
+            // pages through the same relation.
+            $tenant->users()->attach($request->user());
+
+            Membership::create([
+                'user_id' => $request->user()->id,
+                'tenant_id' => $tenant->id,
+                'role' => MembershipRole::Owner,
+            ]);
         });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Tenant created.')]);

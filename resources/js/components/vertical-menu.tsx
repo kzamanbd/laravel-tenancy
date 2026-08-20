@@ -10,7 +10,7 @@ import { useTheme } from '@/context/theme-context';
 import { useUi } from '@/context/ui-context';
 import { useFocusTrap } from '@/hooks/use-focus-trap';
 import { useLocation } from '@/hooks/use-router';
-import { menu  } from '@/lib/menu';
+import { menu, workspaceMenu } from '@/lib/menu';
 import type {MenuNode} from '@/lib/menu';
 import { cn } from '@/lib/utils';
 import { index as tenantsRoute } from '@/routes/tenants';
@@ -61,7 +61,14 @@ export default function VerticalMenu() {
 
     // Open accordion groups (label-trail keys), shared with VerticalMenuNode.
     // Pure-CSS accordion; visibility is CSS-driven off `.active`.
-    const [openGroups, setOpenGroups] = useState<string[]>(() => activeGroupKeys(menu, pathname));
+    // Status-page routes only exist while a tenant is resolved, so that section
+    // appears and disappears with the workspace the request landed in.
+    const nodes = useMemo(
+        () => (props.tenant ? [...menu, ...workspaceMenu(props.tenant.id)] : menu),
+        [props.tenant],
+    );
+
+    const [openGroups, setOpenGroups] = useState<string[]>(() => activeGroupKeys(nodes, pathname));
 
     // Accordion behaviour: only one group open per level. Opening a group keeps
     // its ancestor chain open but collapses its siblings (and their subtrees);
@@ -83,7 +90,7 @@ export default function VerticalMenu() {
     if (pathname !== lastPathname) {
         setLastPathname(pathname);
 
-        const active = activeGroupKeys(menu, pathname);
+        const active = activeGroupKeys(nodes, pathname);
 
         // Routes outside any group leave the current branch open.
         if (active.length) {
@@ -158,7 +165,7 @@ export default function VerticalMenu() {
                     {/* Menu Content (rendered from src/lib/menu.ts) */}
                     <Simplebar className='min-h-0 flex-1'>
                         <ul className='tw-nav-menu'>
-                            {menu.map((node, i) => (
+                            {nodes.map((node, i) => (
                                 <VerticalMenuNode key={i} node={node} level={0} />
                             ))}
                         </ul>

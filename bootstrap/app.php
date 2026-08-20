@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByPathException;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -16,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['themeConfig', 'sidebar_state']);
 
         $middleware->web(append: [
             HandleAppearance::class,
@@ -32,5 +33,9 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
 
+        // A tenant that cannot be identified is a missing page, not a server
+        // error -- and answering 404 rather than 403 keeps the workspace
+        // routes from confirming which tenant ids exist.
         $exceptions->map(TenantCouldNotBeIdentifiedOnDomainException::class, fn () => abort(404, 'Tenant not found'));
+        $exceptions->map(TenantCouldNotBeIdentifiedByPathException::class, fn () => abort(404, 'Tenant not found'));
     })->create();

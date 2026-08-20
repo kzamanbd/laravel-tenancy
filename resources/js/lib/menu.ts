@@ -29,6 +29,30 @@ export interface MenuNode {
     children?: MenuNode[];
 }
 
+/**
+ * Navigation for a single status page. These routes only exist once a tenant is
+ * resolved from the path, so they are appended to the base menu rather than
+ * living in it.
+ */
+export const workspaceMenu = (tenantId: number): MenuNode[] => [
+    { label: 'This page', heading: true },
+    {
+        label: 'Components',
+        icon: 'icon-[mdi--view-grid-outline]',
+        to: `/workspaces/${tenantId}/components`,
+    },
+    {
+        label: 'Incidents',
+        icon: 'icon-[mdi--alert-outline]',
+        to: `/workspaces/${tenantId}/incidents`,
+    },
+    {
+        label: 'Maintenance',
+        icon: 'icon-[mdi--calendar-clock-outline]',
+        to: `/workspaces/${tenantId}/maintenance`,
+    },
+];
+
 export const menu: MenuNode[] = [
     { label: 'Platform', heading: true },
     {
