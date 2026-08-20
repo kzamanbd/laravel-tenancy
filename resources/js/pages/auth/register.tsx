@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -6,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { slugify } from '@/lib/utils';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
@@ -15,6 +17,8 @@ type Props = {
 };
 
 export default function Register({ passwordRules, baseDomain }: Props) {
+    const [subdomain, setSubdomain] = useState('');
+
     return (
         <>
             <Head title="Register" />
@@ -61,20 +65,28 @@ export default function Register({ passwordRules, baseDomain }: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="subdomain">Workspace URL</Label>
-                                <div className="flex items-center">
-                                    <Input
-                                        id="subdomain"
-                                        type="text"
-                                        required
-                                        tabIndex={3}
-                                        name="subdomain"
-                                        placeholder="your-company"
-                                        className="rounded-r-none"
-                                    />
-                                    <span className="inline-flex h-9 items-center rounded-r-md border border-l-0 border-input bg-muted px-3 text-sm text-muted-foreground">
-                                        .{baseDomain}
+                                <Input
+                                    id="subdomain"
+                                    type="text"
+                                    required
+                                    tabIndex={3}
+                                    name="subdomain"
+                                    placeholder="your-company"
+                                    value={subdomain}
+                                    onChange={(event) =>
+                                        setSubdomain(
+                                            slugify(event.target.value, true),
+                                        )
+                                    }
+                                />
+                                <p className="text-sm text-muted-foreground">
+                                    Your workspace will be available at{' '}
+                                    <span className="font-medium text-foreground">
+                                        https://
+                                        {slugify(subdomain) || 'your-company'}.
+                                        {baseDomain}
                                     </span>
-                                </div>
+                                </p>
                                 <InputError message={errors.subdomain} />
                             </div>
 
