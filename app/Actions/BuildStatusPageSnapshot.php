@@ -73,6 +73,7 @@ class BuildStatusPageSnapshot
                     'customCss' => $this->sanitiseCss($tenant->custom_css),
                     'timezone' => $tenant->timezone,
                     'showPoweredBy' => $tenant->show_powered_by,
+                    'subscribeUrl' => route('subscriptions.store', ['tenant' => $tenant->getTenantKey()]),
                 ],
                 'status' => [
                     'value' => $overall->value,

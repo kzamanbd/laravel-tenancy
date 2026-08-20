@@ -181,11 +181,14 @@ it('renders without any external request', function () {
     $this->publisher->publish($this->tenant);
     $html = Storage::disk('status_pages')->get('pages/'.$this->tenant->id.'/index.html');
 
-    // A page that fetches a stylesheet, font, or script from elsewhere is a
-    // page that breaks in exactly the conditions it exists for.
+    // A page that *fetches* a stylesheet, font, script, or image from
+    // elsewhere breaks in exactly the conditions it exists for. The subscribe
+    // form's action is not one of those: it is a user-initiated POST, and the
+    // page renders perfectly without it ever being used.
     expect($html)->not->toMatch('/<script/i')
         ->and($html)->not->toMatch('/<link[^>]+href/i')
-        ->and($html)->not->toMatch('/https?:\/\/(?!schema\.org)/i');
+        ->and($html)->not->toMatch('/\bsrc\s*=\s*["\']https?:/i')
+        ->and($html)->not->toMatch('/@import/i');
 });
 
 it('removes the published artefacts when a page is unpublished', function () {

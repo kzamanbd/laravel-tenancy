@@ -3,6 +3,15 @@
 return [
 
     /*
+     * How many notifications one status page may deliver per minute. The cap
+     * exists to stop a single large fan-out from starving every other tenant's
+     * delivery during an incident, not to limit any one customer's reach.
+     */
+    'notifications' => [
+        'per_tenant_per_minute' => (int) env('NOTIFICATIONS_PER_TENANT_PER_MINUTE', 300),
+    ],
+
+    /*
     |--------------------------------------------------------------------------
     | Third Party Services
     |--------------------------------------------------------------------------

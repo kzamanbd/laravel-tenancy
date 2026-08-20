@@ -79,6 +79,16 @@
     article .meta { font-size: .8125rem; color: var(--muted); }
     .update { border-left: 2px solid var(--border); padding: .5rem 0 .5rem .875rem; margin-top: .875rem; }
     .update p { margin: .375rem 0 0; font-size: .9375rem; white-space: pre-line; }
+    form.subscribe { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .75rem; }
+    form.subscribe input {
+        flex: 1 1 16rem; min-width: 0; padding: .625rem .75rem; font: inherit; font-size: .9375rem;
+        color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: .5rem;
+    }
+    form.subscribe button {
+        padding: .625rem 1.125rem; font: inherit; font-size: .9375rem; font-weight: 600; cursor: pointer;
+        color: #fff; background: var(--brand); border: 0; border-radius: .5rem;
+    }
+    .subscribe-note { font-size: .8125rem; color: var(--muted); margin: .5rem 0 0; }
     footer { margin-top: 3rem; text-align: center; font-size: .8125rem; color: var(--muted); }
     footer a { color: var(--brand); }
     .empty { color: var(--muted); font-size: .9375rem; padding: 1.125rem; }
@@ -165,6 +175,19 @@
     @empty
         <div class="card"><p class="empty">No incidents reported.</p></div>
     @endforelse
+
+    <h2>Subscribe to updates</h2>
+    <div class="card" style="padding: 1.125rem;">
+        {{-- Posts back to the application: the page itself is a static file on
+             a CDN, but a subscription is a write. --}}
+        <form class="subscribe" method="POST" action="{{ $page['subscribeUrl'] }}">
+            <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address">
+            <button type="submit">Subscribe</button>
+        </form>
+        <p class="subscribe-note">
+            We will send a confirmation link first. Nothing is sent to an address that has not confirmed.
+        </p>
+    </div>
 
     <footer>
         @if ($page['supportUrl'])

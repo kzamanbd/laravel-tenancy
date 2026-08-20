@@ -7,8 +7,10 @@ namespace App\Http\Controllers\Workspace;
 use App\Enums\IncidentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Workspace\StoreIncidentUpdateRequest;
+use App\Jobs\FanOutStatusNotification;
 use App\Models\Incident;
 use App\Models\IncidentUpdate;
+use App\Notifications\StatusNotificationPayload;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -26,8 +28,8 @@ class IncidentUpdateController extends Controller
         $status = IncidentStatus::from($validated['status']);
         $publish = $validated['publish'] ?? true;
 
-        DB::transaction(function () use ($incident, $request, $validated, $status, $publish): void {
-            IncidentUpdate::create([
+        $update = DB::transaction(function () use ($incident, $request, $validated, $status, $publish): IncidentUpdate {
+            $update = IncidentUpdate::create([
                 'incident_id' => $incident->id,
                 'author_id' => $request->user()->id,
                 'status' => $status,
@@ -37,16 +39,20 @@ class IncidentUpdateController extends Controller
 
             // An unpublished draft must not move the incident's public status;
             // only publishing does.
-            if (! $publish) {
-                return;
+            if ($publish) {
+                $incident->status = $status;
+                $incident->resolved_at = $status->isTerminal()
+                    ? ($incident->resolved_at ?? now())
+                    : null;
+                $incident->save();
             }
 
-            $incident->status = $status;
-            $incident->resolved_at = $status->isTerminal()
-                ? ($incident->resolved_at ?? now())
-                : null;
-            $incident->save();
+            return $update;
         });
+
+        if ($publish) {
+            $this->notifySubscribers($incident, $update);
+        }
 
         return back();
     }
@@ -71,6 +77,10 @@ class IncidentUpdateController extends Controller
             $incident->save();
         });
 
+        // Approving a held draft is a publish, so subscribers hear about it
+        // exactly as they would a directly posted update.
+        $this->notifySubscribers($incident, $update);
+
         return back();
     }
 
@@ -83,5 +93,19 @@ class IncidentUpdateController extends Controller
         $update->delete();
 
         return back();
+    }
+
+    /**
+     * Only published updates are sent. A draft exists precisely so somebody can
+     * read it before thousands of people do.
+     */
+    private function notifySubscribers(Incident $incident, IncidentUpdate $update): void
+    {
+        $incident->loadMissing('components:id,name');
+
+        FanOutStatusNotification::dispatch(
+            $incident->tenant_id,
+            StatusNotificationPayload::forIncidentUpdate($update, $incident)->toArray(),
+        );
     }
 }

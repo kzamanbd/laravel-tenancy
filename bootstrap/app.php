@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PublishedStatusPageController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TlsAskController;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -38,6 +39,23 @@ return Application::configure(basePath: dirname(__DIR__))
 
             Route::get('status/{tenant}/status.json', [PublishedStatusPageController::class, 'json'])
                 ->name('status-page.json');
+
+            // The published page is a static file, so its subscribe form posts
+            // back here. Throttled by IP: this endpoint sends mail to an
+            // address supplied by an anonymous caller.
+            Route::post('status/{tenant}/subscribe', [SubscriptionController::class, 'store'])
+                ->middleware('throttle:5,1')
+                ->name('subscriptions.store');
+
+            // Reached from a link in an email, so no session and no CSRF token
+            // exists. The token in the URL is the authorisation.
+            Route::get('subscriptions/confirm/{token}', [SubscriptionController::class, 'confirm'])
+                ->middleware('throttle:20,1')
+                ->name('subscriptions.confirm');
+
+            Route::get('subscriptions/unsubscribe/{token}', [SubscriptionController::class, 'unsubscribe'])
+                ->middleware('throttle:20,1')
+                ->name('subscriptions.unsubscribe');
 
             // Consulted by Caddy's on-demand TLS before it obtains a
             // certificate. Throttled because Caddy asks on every connection
