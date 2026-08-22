@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tenancy;
 
-use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -124,7 +124,7 @@ class TenantContext
         $connection->statement('SELECT set_config(?, ?, false)', [$key, $value]);
     }
 
-    private function connection(): ConnectionInterface
+    private function connection(): Connection
     {
         return DB::connection();
     }
