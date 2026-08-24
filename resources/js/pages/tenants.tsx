@@ -1,4 +1,4 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Form, Head } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,12 +12,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { index as tenants, store } from '@/routes/tenants';
-import { index as workspaceComponents } from '@/routes/workspace/components';
 
 type Tenant = {
     id: string;
     name: string | null;
     domains: string[];
+    /**
+     * Absolute, because a workspace lives on its own tenant domain. Null until
+     * the tenant has a domain. Built server-side so the scheme is the request's.
+     */
+    workspaceUrl: string | null;
     users: { name: string; email: string }[];
 };
 
@@ -74,14 +78,19 @@ export default function Tenants({ tenants: list, baseDomain }: Props) {
                                                 .{baseDomain}
                                             </span>
                                         </div>
-                                        <InputError message={errors.subdomain} />
+                                        <InputError
+                                            message={errors.subdomain}
+                                        />
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label className="sm:opacity-0">
                                             Action
                                         </Label>
-                                        <Button type="submit" disabled={processing}>
+                                        <Button
+                                            type="submit"
+                                            disabled={processing}
+                                        >
                                             {processing && <Spinner />}
                                             Create
                                         </Button>
@@ -127,12 +136,28 @@ export default function Tenants({ tenants: list, baseDomain }: Props) {
                                                 className="border-b last:border-0"
                                             >
                                                 <td className="px-4 py-3 font-medium">
-                                                    <Link
-                                                        href={workspaceComponents({ tenant: tenant.id })}
-                                                        className="hover:underline"
-                                                    >
-                                                        {tenant.name ?? tenant.id}
-                                                    </Link>
+                                                    {tenant.workspaceUrl ? (
+                                                        // Plain anchor: the
+                                                        // workspace is on
+                                                        // another origin, and
+                                                        // an Inertia visit is
+                                                        // an XHR that cannot
+                                                        // follow it.
+                                                        <a
+                                                            href={
+                                                                tenant.workspaceUrl
+                                                            }
+                                                            className="hover:underline"
+                                                        >
+                                                            {tenant.name ??
+                                                                tenant.id}
+                                                        </a>
+                                                    ) : (
+                                                        <span>
+                                                            {tenant.name ??
+                                                                tenant.id}
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="px-4 py-3 text-muted-foreground">
                                                     {tenant.users
@@ -140,8 +165,9 @@ export default function Tenants({ tenants: list, baseDomain }: Props) {
                                                         .join(', ') || '—'}
                                                 </td>
                                                 <td className="px-4 py-3 text-muted-foreground">
-                                                    {tenant.domains.join(', ') ||
-                                                        '—'}
+                                                    {tenant.domains.join(
+                                                        ', ',
+                                                    ) || '—'}
                                                 </td>
                                             </tr>
                                         ))

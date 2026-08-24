@@ -78,6 +78,12 @@ sequenceDiagram
 
 ---
 
+> **Where the workspace lives.** Administration is on the page's own domain, with
+> no page id in the URL: `https://acme.example.com/workspaces/components`. The
+> tenant comes from the host, so there is nothing to edit in the address bar. The
+> central domain hosts sign-up, the portfolio dashboard, and the page list; the
+> workspace paths do not exist there and answer 404.
+
 ## Level 2 — Viewer
 
 **Who:** a stakeholder who should see the workspace but must not change it —
@@ -104,7 +110,7 @@ refused by policy.
 
 ### Report an incident
 
-1. `/workspaces/{id}/incidents` → **New incident**.
+1. `/workspaces/incidents` on your page's domain → **New incident**.
 2. Title, impact (`none` / `minor` / `major` / `critical`), affected components,
    and whether to publish.
 3. Save. If published, the page republishes automatically — no separate "publish"
@@ -128,7 +134,7 @@ exactly like a directly posted update, notification included.
 
 ### Change a component's status
 
-`/workspaces/{id}/components` → edit. The page banner recalculates to the worst
+`/workspaces/components` → edit. The page banner recalculates to the worst
 status present and republishes.
 
 Marking a component non-public removes it from the published page entirely while
@@ -136,7 +142,7 @@ keeping its history internally.
 
 ### Schedule maintenance
 
-`/workspaces/{id}/maintenance` → new window, with start and end times and affected
+`/workspaces/maintenance` → new window, with start and end times and affected
 components. Published windows appear on the page while `scheduled` or `in_progress`.
 
 > Maintenance windows do **not** notify subscribers today, and `auto_transition`
@@ -145,7 +151,7 @@ components. Published windows appear on the page while `scheduled` or `in_progre
 
 ### Manage the page's look
 
-`/workspaces/{id}/settings` — name, headline, support URL, logo URL, primary
+`/workspaces/settings` — name, headline, support URL, logo URL, primary
 colour, timezone, custom CSS, "powered by" badge. Saving republishes.
 
 Custom CSS is sanitised on publish: `<` is stripped and `@import` removed, because
@@ -167,7 +173,7 @@ Everything an editor can do, plus:
 
 ### Connect a custom domain
 
-1. `/workspaces/{id}/domains` → add `status.acme.com`. Requires a paid plan.
+1. `/workspaces/domains` → add `status.acme.com`. Requires a paid plan.
 2. The screen shows the exact records:
    - **CNAME** `status.acme.com` → `cname.<platform>`, or
    - **TXT** `_status-verify.status.acme.com` = the verification token.
@@ -181,7 +187,7 @@ Troubleshooting is in [05](05-custom-domains-tls.md#failure-modes).
 
 ### Manage subscribers
 
-`/workspaces/{id}/subscribers` lists them with their state. Admins can add an
+`/workspaces/subscribers` lists them with their state. Admins can add an
 address manually (still subject to the plan limit) and remove one. Removing is not
 the same as unsubscribing — it deletes the record.
 
@@ -259,11 +265,11 @@ Full runbook: [09](09-operations.md).
 | Check if a service is down | Visitor | The published page |
 | Get told when it changes | Subscriber | Subscribe form on the page |
 | Watch without touching | Viewer | `/dashboard` |
-| Report an outage | Editor | `/workspaces/{id}/incidents` |
+| Report an outage | Editor | `/workspaces/incidents` |
 | Post an update during one | Editor | The incident's timeline |
-| Announce planned downtime | Editor | `/workspaces/{id}/maintenance` |
-| Rebrand the page | Editor | `/workspaces/{id}/settings` |
-| Use my own domain | Admin | `/workspaces/{id}/domains` |
+| Announce planned downtime | Editor | `/workspaces/maintenance` |
+| Rebrand the page | Editor | `/workspaces/settings` |
+| Use my own domain | Admin | `/workspaces/domains` |
 | Delete something | Admin | Any list screen |
 | Change the plan | Owner | Database, for now |
 | Create another page | Owner | `/tenants` |

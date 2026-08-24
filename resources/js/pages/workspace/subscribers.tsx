@@ -1,4 +1,4 @@
-import { Form, Head, router, usePage } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import EmptyState from '@/components/empty-state';
 import InputError from '@/components/input-error';
 import { Badge } from '@/components/ui/badge';
@@ -46,7 +46,6 @@ function Stat({ label, value }: { label: string; value: string | number }) {
 }
 
 export default function Subscribers({ subscribers, stats, channels, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
     const integrationChannels = channels.filter((channel) => channel.value !== 'email' && !channel.metered);
 
     return (
@@ -86,7 +85,7 @@ export default function Subscribers({ subscribers, stats, channels, can }: Props
                         </CardHeader>
                         <CardContent>
                             <Form
-                                {...store.form({ tenant: tenant.id })}
+                                {...store.form()}
                                 resetOnSuccess={['endpoint']}
                                 className="grid gap-4 sm:grid-cols-[1fr_2fr_auto] sm:items-start"
                             >
@@ -192,7 +191,6 @@ export default function Subscribers({ subscribers, stats, channels, can }: Props
                                                             onClick={() =>
                                                                 router.delete(
                                                                     destroy({
-                                                                        tenant: tenant.id,
                                                                         subscriber: subscriber.id,
                                                                     }).url,
                                                                     { preserveScroll: true },

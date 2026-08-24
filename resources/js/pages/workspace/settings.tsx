@@ -1,4 +1,4 @@
-import { Form, Head, router, usePage } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,7 +26,6 @@ type Props = {
 };
 
 export default function PageSettings({ page, timezones, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
 
     return (
         <>
@@ -54,7 +53,7 @@ export default function PageSettings({ page, timezones, can }: Props) {
                             <Button
                                 variant="light"
                                 size="sm"
-                                onClick={() => router.post(publish({ tenant: tenant.id }).url, {}, { preserveScroll: true })}
+                                onClick={() => router.post(publish().url, {}, { preserveScroll: true })}
                             >
                                 Republish
                             </Button>
@@ -69,7 +68,7 @@ export default function PageSettings({ page, timezones, can }: Props) {
                 </p>
 
                 <Form
-                    {...update.form({ tenant: tenant.id })}
+                    {...update.form()}
                     options={{ preserveScroll: true }}
                     className="grid items-start gap-4 lg:grid-cols-2"
                 >

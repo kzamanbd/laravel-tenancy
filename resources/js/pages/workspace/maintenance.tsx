@@ -1,4 +1,4 @@
-import { Form, Head, router, usePage } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import EmptyState from '@/components/empty-state';
 import InputError from '@/components/input-error';
@@ -34,7 +34,6 @@ type Props = {
 };
 
 export default function MaintenancePage({ maintenances, components, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
 
     // Read the clock once, in a lazy initialiser: calling it during render is
     // impure, and under SSR the server's `now` would not match the client's.
@@ -64,7 +63,7 @@ export default function MaintenancePage({ maintenances, components, can }: Props
                         </CardHeader>
                         <CardContent>
                             <Form
-                                {...store.form({ tenant: tenant.id })}
+                                {...store.form()}
                                 resetOnSuccess={['title', 'description']}
                                 className="grid gap-4"
                             >
@@ -246,7 +245,6 @@ export default function MaintenancePage({ maintenances, components, can }: Props
                                                         onClick={() =>
                                                             router.delete(
                                                                 destroy({
-                                                                    tenant: tenant.id,
                                                                     maintenance: window.id,
                                                                 }).url,
                                                                 { preserveScroll: true },

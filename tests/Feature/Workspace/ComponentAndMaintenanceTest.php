@@ -28,7 +28,7 @@ beforeEach(function () {
         return [$tenant, $user];
     });
 
-    $this->base = "/workspaces/{$this->tenant->id}";
+    $this->base = workspaceUrl($this->tenant);
 });
 
 it('creates a component against the resolved tenant without being told which', function () {

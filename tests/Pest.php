@@ -89,3 +89,17 @@ function actingAsCentralDomain(): void
 
     app(TenantContext::class)->forget();
 }
+
+/**
+ * Absolute URL of a tenant's workspace.
+ *
+ * Workspace routes resolve the tenant from the host, so a test has to request
+ * them on that host -- a relative path would be answered by the central domain,
+ * where these routes do not exist.
+ */
+function workspaceUrl(Tenant $tenant, string $path = ''): string
+{
+    $domain = $tenant->domains()->firstOrFail()->domain;
+
+    return "http://{$domain}/workspaces".$path;
+}

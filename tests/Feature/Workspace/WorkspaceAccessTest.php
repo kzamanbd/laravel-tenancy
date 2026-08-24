@@ -12,21 +12,22 @@ use App\Models\Organization;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
+use Inertia\Testing\AssertableInertia as Assert;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 /*
 |--------------------------------------------------------------------------
 | Workspace access control
 |--------------------------------------------------------------------------
 |
-| Path-based tenancy takes the tenant id straight from the URL and performs no
-| authorization of its own; Row-Level Security then scopes the request to
-| exactly the tenant that was named. That combination is only safe because
+| Domain-based tenancy resolves whichever tenant owns the requested host and
+| performs no authorization of its own; Row-Level Security then scopes the
+| request to exactly that tenant. That combination is only safe because
 | EnsureUserBelongsToTenant sits behind the identification middleware.
 |
 | These tests exist to prove that ordering holds. If the middleware is ever
-| reordered or dropped, editing an id in the address bar walks another
-| organization's pages with the database's full cooperation.
+| reordered or dropped, typing another organization's subdomain walks their
+| pages with the database's full cooperation.
 |
 */
 
@@ -58,23 +59,23 @@ beforeEach(function () {
 });
 
 /** @return list<string> */
-function workspacePaths(int $tenantId): array
+function workspacePaths(Tenant $tenant): array
 {
     return [
-        "/workspaces/{$tenantId}/components",
-        "/workspaces/{$tenantId}/incidents",
-        "/workspaces/{$tenantId}/maintenance",
+        workspaceUrl($tenant, '/components'),
+        workspaceUrl($tenant, '/incidents'),
+        workspaceUrl($tenant, '/maintenance'),
     ];
 }
 
 it('lets a member reach their own workspace', function () {
-    foreach (workspacePaths($this->tenantA->id) as $path) {
+    foreach (workspacePaths($this->tenantA) as $path) {
         $this->actingAs($this->member)->get($path)->assertOk();
     }
 });
 
-it('forbids a member from reaching another organization\'s workspace by id', function () {
-    foreach (workspacePaths($this->tenantB->id) as $path) {
+it('forbids a member from reaching another organization\'s workspace by hostname', function () {
+    foreach (workspacePaths($this->tenantB) as $path) {
         $this->actingAs($this->member)->get($path)->assertForbidden();
     }
 });
@@ -82,25 +83,37 @@ it('forbids a member from reaching another organization\'s workspace by id', fun
 it('forbids a user with no membership anywhere', function () {
     $stranger = asSuperAdmin(fn () => User::factory()->create());
 
-    foreach (workspacePaths($this->tenantA->id) as $path) {
+    foreach (workspacePaths($this->tenantA) as $path) {
         $this->actingAs($stranger)->get($path)->assertForbidden();
     }
 });
 
 it('redirects a guest to log in rather than resolving the tenant', function () {
-    $this->get("/workspaces/{$this->tenantA->id}/components")
-        ->assertRedirect(route('login'));
+    $response = $this->get(workspaceUrl($this->tenantA, '/components'));
+
+    $response->assertRedirect();
+
+    expect($response->headers->get('Location'))->toEndWith('/login');
 });
 
-it('404s on a tenant id that does not exist', function () {
+it('404s on a hostname that belongs to no tenant', function () {
     $this->actingAs($this->member)
-        ->get('/workspaces/999999/components')
+        ->get('http://nobody-owns-this.'.config('tenancy.central_domains')[0].'/workspaces/components')
+        ->assertNotFound();
+});
+
+it('404s on the central domain, where a workspace has no tenant to resolve', function () {
+    // The workspace is addressed by host, so these paths simply do not exist on
+    // the central domain -- and answering 404 rather than 403 keeps them from
+    // confirming anything about who exists.
+    $this->actingAs($this->member)
+        ->get('/workspaces/components')
         ->assertNotFound();
 });
 
 it('cannot write into another organization\'s workspace', function () {
     $this->actingAs($this->member)
-        ->post("/workspaces/{$this->tenantB->id}/components", [
+        ->post(workspaceUrl($this->tenantB, '/components'), [
             'name' => 'Injected',
             'status' => 'operational',
         ])
@@ -119,7 +132,7 @@ it('cannot reach another workspace\'s incident through its own url', function ()
     // The tenant in the path is one the user *can* reach, but the incident
     // belongs to another. RLS makes the record invisible, so binding 404s.
     $this->actingAs($this->member)
-        ->get("/workspaces/{$this->tenantA->id}/incidents/{$foreign->id}")
+        ->get(workspaceUrl($this->tenantA, "/incidents/{$foreign->id}"))
         ->assertNotFound();
 });
 
@@ -127,7 +140,7 @@ it('cannot delete another workspace\'s maintenance window', function () {
     $foreign = asSuperAdmin(fn () => Maintenance::factory()->forTenant($this->tenantB)->create());
 
     $this->actingAs($this->member)
-        ->delete("/workspaces/{$this->tenantA->id}/maintenance/{$foreign->id}")
+        ->delete(workspaceUrl($this->tenantA, "/maintenance/{$foreign->id}"))
         ->assertNotFound();
 
     $survived = asSuperAdmin(fn () => Maintenance::query()->find($foreign->id));
@@ -150,11 +163,11 @@ it('grants access through an organization-wide membership', function () {
     });
 
     $this->actingAs($orgMember)
-        ->get("/workspaces/{$this->tenantA->id}/components")
+        ->get(workspaceUrl($this->tenantA, '/components'))
         ->assertOk();
 
     $this->actingAs($orgMember)
-        ->get("/workspaces/{$this->tenantB->id}/components")
+        ->get(workspaceUrl($this->tenantB, '/components'))
         ->assertForbidden();
 });
 
@@ -173,11 +186,11 @@ it('lets a viewer read but not write', function () {
     });
 
     $this->actingAs($viewer)
-        ->get("/workspaces/{$this->tenantA->id}/components")
+        ->get(workspaceUrl($this->tenantA, '/components'))
         ->assertOk();
 
     $this->actingAs($viewer)
-        ->post("/workspaces/{$this->tenantA->id}/components", [
+        ->post(workspaceUrl($this->tenantA, '/components'), [
             'name' => 'Nope',
             'status' => 'operational',
         ])
@@ -199,18 +212,18 @@ it('lets an editor write but not delete', function () {
     });
 
     $this->actingAs($editor)
-        ->post("/workspaces/{$this->tenantA->id}/components", [
+        ->post(workspaceUrl($this->tenantA, '/components'), [
             'name' => 'Search',
             'status' => 'operational',
         ])
         ->assertRedirect();
 
     $this->actingAs($editor)
-        ->delete("/workspaces/{$this->tenantA->id}/components/{$component->id}")
+        ->delete(workspaceUrl($this->tenantA, "/components/{$component->id}"))
         ->assertForbidden();
 });
 
-it('keeps the membership gate registered behind path identification', function () {
+it('keeps the membership gate registered behind host identification', function () {
     // The behavioural tests above cannot distinguish the middleware from the
     // policies -- either layer alone returns 403, so removing one leaves the
     // suite green. Asserting the wiring directly is what catches a silent
@@ -224,14 +237,61 @@ it('keeps the membership gate registered behind path identification', function (
     $routes->each(function (Illuminate\Routing\Route $route): void {
         $middleware = $route->gatherMiddleware();
 
-        $identification = array_search(InitializeTenancyByPath::class, $middleware, strict: true);
+        $identification = array_search(InitializeTenancyByDomain::class, $middleware, strict: true);
         $gate = array_search(EnsureUserBelongsToTenant::class, $middleware, strict: true);
 
         expect($identification)->not->toBeFalse("[{$route->getName()}] does not identify a tenant.")
             ->and($gate)->not->toBeFalse("[{$route->getName()}] is missing the membership gate.")
             ->and($gate)->toBeGreaterThan($identification,
-                "[{$route->getName()}] gates membership before the tenant is resolved.");
+                "[{$route->getName()}] gates membership before the tenant is resolved.")
+            // The tenant comes from the host. A page id back in the path would
+            // be a second, unauthenticated way to name a tenant.
+            ->and($route->parameterNames())->not->toContain('tenant',
+                "[{$route->getName()}] takes a tenant from the path.");
     });
+});
+
+it('lists only the pages the caller is a member of', function () {
+    // The list carries names, member email addresses, and hostnames. Showing
+    // every tenant told any authenticated user which organizations exist and
+    // who works there.
+    $response = $this->actingAs($this->member)->get('/tenants');
+
+    $response->assertOk();
+    $response->assertInertia(fn (Assert $page) => $page
+        ->has('tenants', 1)
+        ->where('tenants.0.name', 'Tenant A'));
+});
+
+it('lists nothing for a user with no membership', function () {
+    $stranger = asSuperAdmin(fn () => User::factory()->create());
+
+    $this->actingAs($stranger)
+        ->get('/tenants')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->has('tenants', 0));
+});
+
+it('lists every page in an organization to an organization-wide member', function () {
+    [$orgMember, $second] = asSuperAdmin(function () {
+        $user = User::factory()->create();
+
+        Membership::factory()->create([
+            'user_id' => $user->id,
+            'tenant_id' => null,
+            'organization_id' => $this->orgA->id,
+            'role' => MembershipRole::Admin,
+        ]);
+
+        return [$user, Tenant::factory()->forOrganization($this->orgA)->create(['name' => 'Tenant A2'])];
+    });
+
+    $this->actingAs($orgMember)
+        ->get('/tenants')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->has('tenants', 2));
+
+    expect($second->organization_id)->toBe($this->orgA->id);
 });
 
 it('makes the creator an owner of the page they provision', function () {
@@ -246,7 +306,9 @@ it('makes the creator an owner of the page they provision', function () {
     expect($creator->fresh()->roleFor($tenant))->toBe(MembershipRole::Owner);
 
     // And the page is reachable straight away, rather than 403-ing its author.
+    $tenant->load('domains');
+
     $this->actingAs($creator)
-        ->get("/workspaces/{$tenant->id}/components")
+        ->get(workspaceUrl($tenant, '/components'))
         ->assertOk();
 });

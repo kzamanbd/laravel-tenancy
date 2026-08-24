@@ -1,4 +1,4 @@
-import { Form, Head, Link, router, usePage } from '@inertiajs/react';
+import { Form, Head, Link, router } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import StatusBadge, { impactTone, incidentStatusTone } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
@@ -44,7 +44,6 @@ type Props = {
 };
 
 export default function IncidentShow({ incident, statuses, impacts, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
 
     return (
         <>
@@ -54,7 +53,7 @@ export default function IncidentShow({ incident, statuses, impacts, can }: Props
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <Link
-                            href={index({ tenant: tenant.id })}
+                            href={index()}
                             className="text-sm text-primary hover:underline"
                         >
                             ← All incidents
@@ -122,7 +121,6 @@ export default function IncidentShow({ incident, statuses, impacts, can }: Props
                                                     onClick={() =>
                                                         router.post(
                                                             publish({
-                                                                tenant: tenant.id,
                                                                 incident: incident.id,
                                                                 update: update.id,
                                                             }).url,
@@ -149,7 +147,7 @@ export default function IncidentShow({ incident, statuses, impacts, can }: Props
                                 </CardHeader>
                                 <CardContent>
                                     <Form
-                                        {...storeUpdate.form({ tenant: tenant.id, incident: incident.id })}
+                                        {...storeUpdate.form({ incident: incident.id })}
                                         resetOnSuccess={['body']}
                                         options={{ preserveScroll: true }}
                                     >
@@ -217,7 +215,7 @@ export default function IncidentShow({ incident, statuses, impacts, can }: Props
                                 </CardHeader>
                                 <CardContent>
                                     <Form
-                                        {...updateIncident.form({ tenant: tenant.id, incident: incident.id })}
+                                        {...updateIncident.form({ incident: incident.id })}
                                         options={{ preserveScroll: true }}
                                     >
                                         {({ processing, errors }) => (

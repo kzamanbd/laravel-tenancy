@@ -41,7 +41,7 @@ beforeEach(function () {
         return [$tenant, $user];
     });
 
-    $this->base = "/workspaces/{$this->tenant->id}";
+    $this->base = workspaceUrl($this->tenant);
 });
 
 it('opens an incident together with its first update', function () {

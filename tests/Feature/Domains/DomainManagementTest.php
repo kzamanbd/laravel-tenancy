@@ -41,7 +41,7 @@ beforeEach(function () {
         return [$tenant, $owner, $viewer];
     });
 
-    $this->base = "/workspaces/{$this->tenant->id}";
+    $this->base = workspaceUrl($this->tenant);
 });
 
 it('adds a domain as pending rather than verified', function () {

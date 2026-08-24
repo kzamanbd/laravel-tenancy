@@ -61,8 +61,8 @@ they see is on the public page anyway once published.
 
 ```mermaid
 flowchart TD
-    R["Request to /workspaces/7/incidents"] --> M1["auth + verified"]
-    M1 --> M2["InitializeTenancyByPath<br/><i>sets app.tenant_id = 7</i>"]
+    R["Request to acme.example.com/workspaces/incidents"] --> M1["auth + verified"]
+    M1 --> M2["InitializeTenancyByDomain<br/><i>sets app.tenant_id from the host</i>"]
     M2 --> M3["EnsureUserBelongsToTenant<br/><i>403 unless roleFor(7) !== null</i>"]
     M3 --> P["Policy<br/><i>Gate::authorize — what may this role do?</i>"]
     P --> DB[("RLS<br/><i>rows for tenant 7 only</i>")]
@@ -72,7 +72,7 @@ Each layer answers a different question, and none is redundant:
 
 | Layer | Question | If it were missing |
 |---|---|---|
-| `EnsureUserBelongsToTenant` | *May this user be here at all?* | Editing the id in the address bar would walk another organization's pages, with the database's full cooperation — `InitializeTenancyByPath` performs no authorization of its own |
+| `EnsureUserBelongsToTenant` | *May this user be here at all?* | Typing another organization's subdomain would walk their pages, with the database's full cooperation — `InitializeTenancyByDomain` performs no authorization of its own |
 | Policy | *What may this role do here?* | An invited viewer could delete components |
 | Row-Level Security | *Which rows exist for this request?* | A forgotten `where` clause would leak across tenants |
 
@@ -111,13 +111,14 @@ not exist yet.
 
 ## Known gaps
 
-- **`GET /tenants` is not scoped.** `TenantController::index` lists every tenant
-  with its domains and users to any authenticated, verified user. Fine for a
-  single-operator deployment; must be scoped to the user's memberships before this
-  is multi-customer.
-- **No member-management UI.** Memberships are created only when a user creates a
-  page (`TenantController::store` writes an `owner` membership plus the
-  `tenant_user` pivot row). Inviting a colleague currently means inserting a row.
+- **Two notions of "my pages" existed.** `memberships` grants access; the
+  `tenant_user` pivot does not, because it carries no role. `User::accessibleTenants()`
+  is now the single query behind both the page list and the portfolio dashboard,
+  so what a user is shown matches what the gate will let them open.
+- **No member-management UI.** Memberships are created only when a page is
+  provisioned — registration writes an organization-wide `owner` membership, and
+  `TenantController::store` writes a tenant-scoped one. Inviting a colleague
+  currently means inserting a row.
 - **No super-admin console and no audit log.** Cross-tenant access exists only as
   `TenantContext::withoutIsolation()` from a shell. Planned for Phase 7, along with
   impersonation.

@@ -54,7 +54,7 @@ flowchart LR
     end
 
     subgraph Writers["Control plane"]
-        A[Admin] -->|"/workspaces/{tenant}/…"| APP["Laravel + Inertia"]
+        A[Admin] -->|"acme.example.com/workspaces/…"| APP["Laravel + Inertia"]
         APP --> PG[("PostgreSQL + RLS")]
         APP -->|dispatch| Q[["Queue"]]
         Q --> PUB["StatusPagePublisher"]
@@ -80,9 +80,9 @@ Routes live in three places, deliberately:
 
 | Where | Group | Middleware |
 |---|---|---|
-| `routes/web.php` | Home + dashboard | `universal`, `InitializeTenancyByDomain` — resolves on both central and tenant domains |
+| `routes/web.php` | Home + dashboard | `universal`, `InitializeTenancyByDomain`; the dashboard adds `EnsureUserBelongsToTenant` |
 | `routes/web.php` | `tenants.*` | `auth`, `verified`, central domain only |
-| `routes/web.php` | `workspace.*` under `/workspaces/{tenant}` | `auth`, `verified`, `InitializeTenancyByPath`, `EnsureUserBelongsToTenant` |
+| `routes/web.php` | `workspace.*` under `/workspaces` on a **tenant** domain | `auth`, `verified`, `InitializeTenancyByDomain`, `EnsureUserBelongsToTenant` |
 | `routes/settings.php` | Profile, security, appearance | `auth` |
 | `bootstrap/app.php` (`withRouting(then:)`) | Published pages, subscriptions, TLS ask | **No `web` group at all** |
 

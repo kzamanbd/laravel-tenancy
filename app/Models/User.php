@@ -7,6 +7,7 @@ use App\Enums\MembershipRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -64,6 +65,37 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Every status page this user may open, as a query.
+     *
+     * Memberships are the authority on access, not the `tenant_user` pivot --
+     * the pivot carries no role, so a row there means "was attached at some
+     * point", not "may read this page". Anything that lists a user's pages has
+     * to agree with what the membership gate will decide, or it advertises
+     * pages that then answer 403, or hides pages it would happily serve.
+     *
+     * Both grants count: a membership on the tenant itself, and one held across
+     * the organization that owns it.
+     *
+     * @return Builder<Tenant>
+     */
+    public function accessibleTenants(): Builder
+    {
+        $tenantIds = $this->memberships()
+            ->whereNotNull('tenant_id')
+            ->pluck('tenant_id');
+
+        $organizationIds = $this->memberships()
+            ->whereNull('tenant_id')
+            ->whereNotNull('organization_id')
+            ->pluck('organization_id');
+
+        return Tenant::query()->where(function (Builder $query) use ($tenantIds, $organizationIds): void {
+            $query->whereIn('id', $tenantIds)
+                ->orWhereIn('organization_id', $organizationIds);
+        });
     }
 
     /**

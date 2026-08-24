@@ -29,6 +29,25 @@ class TenantFactory extends Factory
         ];
     }
 
+    /**
+     * Give every tenant the platform subdomain it would be provisioned with.
+     *
+     * A tenant without a domain is not reachable: the workspace resolves the
+     * tenant from the host, and the public page is served on it too. Leaving
+     * factories domainless would make tests describe a state the application
+     * never creates.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Tenant $tenant): void {
+            if ($tenant->domains()->exists()) {
+                return;
+            }
+
+            $tenant->createDomain($tenant->slug.'.'.config('tenancy.central_domains')[0]);
+        });
+    }
+
     public function unpublished(): static
     {
         return $this->state(fn (): array => ['published_at' => null]);

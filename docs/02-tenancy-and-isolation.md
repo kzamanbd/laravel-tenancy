@@ -92,7 +92,7 @@ Three ways a request acquires a tenant:
 | Mode | Where | Middleware |
 |---|---|---|
 | **By domain** | `page.example.com` and platform subdomains | `InitializeTenancyByDomain` (on the `universal` group, so central domains pass through with no tenant) |
-| **By path** | `/workspaces/{tenant}/…` | `InitializeTenancyByPath` + `EnsureUserBelongsToTenant` |
+| **By domain (workspace)** | `acme.example.com/workspaces/…` | `InitializeTenancyByDomain` + `EnsureUserBelongsToTenant` |
 | **None** | Central domain: dashboard, tenant list, settings | Tenant-scoped tables read as empty |
 
 `RowLevelSecurityBootstrapper` is registered **first** in `config/tenancy.php`
@@ -102,26 +102,33 @@ the same act. The rest of the request assumes the connection is already scoped.
 `DatabaseTenancyBootstrapper` is deliberately left commented out — this is
 single-database tenancy.
 
-### Path-based tenancy needs a guard
+### Host-based tenancy needs a guard
 
-`InitializeTenancyByPath` performs **no authorization**. It initializes whatever id
-appears in the URL, and RLS then faithfully scopes the request to exactly that
-tenant. Without a check, editing the id in the address bar would walk another
-organization's pages with the database's full cooperation.
+`InitializeTenancyByDomain` performs **no authorization**. It resolves whichever
+tenant owns the requested host, and RLS then faithfully scopes the request to
+exactly that tenant. Without a check, typing another organization's subdomain
+would walk their pages with the database's full cooperation — which is not
+hypothetical: before the gate covered it, `acme.example.com/dashboard` returned
+that tenant's component counts, open incidents, and subscriber totals to any
+authenticated stranger.
 
 `EnsureUserBelongsToTenant` is what makes that safe:
 
 ```php
 $tenant = tenant();
-abort_if($tenant === null, 404);
-$user = $request->user();
-abort_if($user === null, 403);
-abort_unless($user->canAccessTenant($tenant), 403);
+
+if ($tenant === null) {
+    return $next($request);   // central domain: nothing tenant-scoped is visible
+}
+
+abort_if($request->user() === null, 403);
+abort_unless($request->user()->canAccessTenant($tenant), 403);
 ```
 
-It must run **immediately after** `InitializeTenancyByPath` — which also forgets
-the route parameter once resolved, so the tenant is read from the tenancy context
-rather than the request. `WorkspaceAccessTest` asserts both the registration *and
+It must run **immediately after** `InitializeTenancyByDomain`, and it reads the
+tenant from the tenancy context rather than the request. A *resolved* tenant must
+be one the user belongs to; *no* tenant passes through, because that is the
+central-domain case, where nothing tenant-scoped is visible anyway. `WorkspaceAccessTest` asserts both the registration *and
 the ordering* structurally, because behavioural tests cannot tell the middleware
 apart from the policies that also happen to block.
 
@@ -158,7 +165,7 @@ SECURITY` turns ~74 tests red; granting `BYPASSRLS` to the app role turns ~66 re
 | `TriggersStatusPagePublish` | Looks up the central `Tenant` row from a model hook. |
 | `FanOutStatusNotification` | Iterates one tenant's subscribers from a worker. |
 | `SubscriptionController` | Public, session-less, no tenant resolved: finds a subscriber by token. |
-| `BuildDashboardOverview::forUser` | Aggregating a user's whole portfolio is genuinely cross-tenant; guarded by an explicit `whereIn` over the tenants that user can reach. |
+| `BuildDashboardOverview::forUser` | Aggregating a user's whole portfolio is genuinely cross-tenant; guarded by an explicit `whereIn` over `User::accessibleTenants()`, the same memberships the gate reads. |
 | `PublishStatusPages` command | Console has no tenant. |
 | Test fixtures | Seeding rows for several tenants. |
 

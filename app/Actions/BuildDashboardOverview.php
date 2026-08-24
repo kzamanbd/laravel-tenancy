@@ -76,7 +76,9 @@ class BuildDashboardOverview
      */
     public function forUser(User $user): array
     {
-        $tenants = $user->tenants()->get();
+        // Memberships, not the `tenant_user` pivot: the portfolio has to list
+        // exactly the pages the membership gate will let this user open.
+        $tenants = $user->accessibleTenants()->get();
         $tenantIds = $tenants->pluck('id')->all();
 
         if ($tenantIds === []) {

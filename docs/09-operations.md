@@ -131,6 +131,13 @@ Deployment notes:
 5. Grep for `Status notification delivery failed`; five failures unsubscribe an
    endpoint.
 
+### A user gets 403 on their own page
+
+Membership, not the `tenant_user` pivot, is what grants access — the pivot row
+carries no role. Check `User::roleFor($tenant)`; if it is null the user has a
+pivot row but no `memberships` row, and both the workspace and the tenant-domain
+dashboard will refuse them.
+
 ### The whole test suite fails
 
 Almost always the database role. See [Local setup](#1-postgresql-with-a-non-superuser-role).

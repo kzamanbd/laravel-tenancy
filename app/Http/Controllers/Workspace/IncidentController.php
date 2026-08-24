@@ -124,7 +124,7 @@ class IncidentController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Incident opened.')]);
 
-        return to_route('workspace.incidents.show', ['tenant' => tenant()->getTenantKey(), 'incident' => $incident]);
+        return to_route('workspace.incidents.show', ['incident' => $incident]);
     }
 
     public function update(UpdateIncidentRequest $request, Incident $incident): RedirectResponse
@@ -155,7 +155,7 @@ class IncidentController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Incident deleted.')]);
 
-        return to_route('workspace.incidents.index', ['tenant' => tenant()->getTenantKey()]);
+        return to_route('workspace.incidents.index');
     }
 
     /**

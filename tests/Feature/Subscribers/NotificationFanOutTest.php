@@ -49,7 +49,7 @@ beforeEach(function () {
         return [$tenant, $owner];
     });
 
-    $this->base = "/workspaces/{$this->tenant->id}";
+    $this->base = workspaceUrl($this->tenant);
 });
 
 it('queues a fan-out when an update is published', function () {

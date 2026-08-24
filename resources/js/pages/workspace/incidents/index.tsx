@@ -1,4 +1,4 @@
-import { Form, Head, Link, usePage } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import EmptyState from '@/components/empty-state';
 import InputError from '@/components/input-error';
 import StatusBadge, { impactTone, incidentStatusTone } from '@/components/status-badge';
@@ -34,7 +34,6 @@ type Props = {
 };
 
 export default function Incidents({ incidents, components, statuses, impacts, componentStatuses, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
 
     return (
         <>
@@ -55,7 +54,7 @@ export default function Incidents({ incidents, components, statuses, impacts, co
                         </CardHeader>
                         <CardContent>
                             <Form
-                                {...store.form({ tenant: tenant.id })}
+                                {...store.form()}
                                 resetOnSuccess={['title', 'body']}
                                 className="grid gap-4"
                             >
@@ -215,7 +214,7 @@ export default function Incidents({ incidents, components, statuses, impacts, co
                                             <tr key={incident.id}>
                                                 <td>
                                                     <Link
-                                                        href={show({ tenant: tenant.id, incident: incident.id })}
+                                                        href={show({ incident: incident.id })}
                                                         className="font-medium hover:underline"
                                                     >
                                                         {incident.title}

@@ -37,7 +37,7 @@ sequenceDiagram
 | Trigger | Mechanism |
 |---|---|
 | Any save or delete on a page-visible model | `TriggersStatusPagePublish` trait → `PublishStatusPage` job |
-| "Publish now" in the workspace | `POST /workspaces/{tenant}/publish` |
+| "Publish now" in the workspace | `POST /workspaces/publish` on the tenant domain |
 | Console | `php artisan status-page:publish {tenant?} [--stale]` |
 | Hourly backstop | `status-page:publish --stale` on the scheduler |
 

@@ -31,7 +31,7 @@ beforeEach(function () {
         return [$tenant, $owner, $viewer];
     });
 
-    $this->base = "/workspaces/{$this->tenant->id}";
+    $this->base = workspaceUrl($this->tenant);
 });
 
 it('saves theming and republishes in the same request', function () {

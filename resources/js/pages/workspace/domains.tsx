@@ -1,4 +1,4 @@
-import { Form, Head, router, usePage } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import EmptyState from '@/components/empty-state';
 import InputError from '@/components/input-error';
@@ -64,7 +64,6 @@ function DnsRow({ type, name, value }: { type: string; name: string; value: stri
 }
 
 export default function Domains({ domains, plan, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
 
     return (
         <>
@@ -95,7 +94,7 @@ export default function Domains({ domains, plan, can }: Props) {
                         </CardHeader>
                         <CardContent>
                             <Form
-                                {...store.form({ tenant: tenant.id })}
+                                {...store.form()}
                                 resetOnSuccess={['domain']}
                                 className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start"
                             >
@@ -166,7 +165,7 @@ export default function Domains({ domains, plan, can }: Props) {
                                                 size="xs"
                                                 onClick={() =>
                                                     router.post(
-                                                        verify({ tenant: tenant.id, domain: domain.id }).url,
+                                                        verify({ domain: domain.id }).url,
                                                         {},
                                                         { preserveScroll: true },
                                                     )
@@ -182,7 +181,7 @@ export default function Domains({ domains, plan, can }: Props) {
                                                 size="xs"
                                                 onClick={() =>
                                                     router.post(
-                                                        primary({ tenant: tenant.id, domain: domain.id }).url,
+                                                        primary({ domain: domain.id }).url,
                                                         {},
                                                         { preserveScroll: true },
                                                     )
@@ -197,7 +196,7 @@ export default function Domains({ domains, plan, can }: Props) {
                                             size="xs"
                                             onClick={() =>
                                                 router.delete(
-                                                    destroy({ tenant: tenant.id, domain: domain.id }).url,
+                                                    destroy({ domain: domain.id }).url,
                                                     { preserveScroll: true },
                                                 )
                                             }

@@ -30,41 +30,40 @@ export interface MenuNode {
 }
 
 /**
- * Navigation for a single status page. These routes only exist once a tenant is
- * resolved from the path, so they are appended to the base menu rather than
- * living in it.
+ * Navigation for a single status page.
+ *
+ * Workspace routes live on the tenant's own domain and take the tenant from the
+ * host, so these are plain same-origin paths -- this menu only renders once a
+ * tenant has been resolved, which means the request is already on the right
+ * host.
  */
-export const workspaceMenu = (tenantId: number): MenuNode[] => [
+export const workspaceMenu = (): MenuNode[] => [
     { label: 'This page', heading: true },
     {
         label: 'Components',
         icon: 'icon-[mdi--view-grid-outline]',
-        to: `/workspaces/${tenantId}/components`,
+        to: '/workspaces/components',
     },
     {
         label: 'Incidents',
         icon: 'icon-[mdi--alert-outline]',
-        to: `/workspaces/${tenantId}/incidents`,
+        to: '/workspaces/incidents',
     },
     {
         label: 'Maintenance',
         icon: 'icon-[mdi--calendar-clock-outline]',
-        to: `/workspaces/${tenantId}/maintenance`,
+        to: '/workspaces/maintenance',
     },
     {
         label: 'Subscribers',
         icon: 'icon-[mdi--email-outline]',
-        to: `/workspaces/${tenantId}/subscribers`,
+        to: '/workspaces/subscribers',
     },
-    {
-        label: 'Domains',
-        icon: 'icon-[mdi--web]',
-        to: `/workspaces/${tenantId}/domains`,
-    },
+    { label: 'Domains', icon: 'icon-[mdi--web]', to: '/workspaces/domains' },
     {
         label: 'Page settings',
         icon: 'icon-[mdi--palette-outline]',
-        to: `/workspaces/${tenantId}/settings`,
+        to: '/workspaces/settings',
     },
 ];
 
@@ -109,8 +108,8 @@ export function flattenMenu(nodes: MenuNode[] = menu): FlatPage[] {
     const walk = (items: MenuNode[], trail: string[], icon: string) => {
         for (const node of items) {
             if (node.heading) {
-continue;
-}
+                continue;
+            }
 
             const nodeIcon = node.icon || icon;
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\MembershipRole;
+use App\Enums\Plan;
 use App\Http\Responses\RegisterResponse;
 use App\Models\Tenant;
 use App\Models\User;
@@ -75,6 +77,38 @@ test('a same-origin registration redirect stays an ordinary redirect', function 
 
     expect($response->getStatusCode())->toBe(302)
         ->and($response->headers->get('Location'))->toBe("http://{$baseDomain}/dashboard");
+});
+
+test('a new registration can open the page it just created', function () {
+    // The pivot row alone carries no role, and both the workspace and the
+    // tenant dashboard are gated on a membership -- so without one the person
+    // who just signed up is locked out of their own page.
+    $baseDomain = config('tenancy.central_domains')[0];
+
+    $this->post(route('register.store'), [
+        'name' => 'Owner User',
+        'email' => 'owner@example.com',
+        'subdomain' => 'owner-co',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $user = User::where('email', 'owner@example.com')->firstOrFail();
+    $tenant = $user->tenants()->firstOrFail();
+
+    expect($user->roleFor($tenant))->toBe(MembershipRole::Owner)
+        // A page with no organization has no plan, which exempts it from every
+        // limit the plan is meant to impose.
+        ->and($tenant->organization)->not->toBeNull()
+        ->and($tenant->organization->plan)->toBe(Plan::Free);
+
+    $this->actingAs($user)
+        ->get("http://owner-co.{$baseDomain}/workspaces/components")
+        ->assertOk();
+
+    $this->actingAs($user)
+        ->get("http://owner-co.{$baseDomain}/dashboard")
+        ->assertOk();
 });
 
 test('registration requires a unique subdomain', function () {

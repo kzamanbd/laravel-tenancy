@@ -1,4 +1,4 @@
-import { Form, Head, router, usePage } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import EmptyState from '@/components/empty-state';
 import InputError from '@/components/input-error';
@@ -33,14 +33,13 @@ type Props = {
 };
 
 export default function Components({ components, groups, statuses, can }: Props) {
-    const tenant = usePage<{ tenant: { id: number } }>().props.tenant;
     const [editing, setEditing] = useState<number | null>(null);
 
     // Changing a status is the most frequent action on this screen, so it is a
     // single select rather than an edit-then-save round trip.
     const changeStatus = (component: Component, status: string) => {
         router.put(
-            update({ tenant: tenant.id, component: component.id }).url,
+            update({ component: component.id }).url,
             {
                 name: component.name,
                 description: component.description,
@@ -72,7 +71,7 @@ export default function Components({ components, groups, statuses, can }: Props)
                         </CardHeader>
                         <CardContent>
                             <Form
-                                {...store.form({ tenant: tenant.id })}
+                                {...store.form()}
                                 resetOnSuccess={['name', 'description']}
                                 className="grid gap-4 sm:grid-cols-[2fr_2fr_1fr_auto] sm:items-start"
                             >
@@ -213,7 +212,6 @@ export default function Components({ components, groups, statuses, can }: Props)
                                                         onClick={() =>
                                                             router.delete(
                                                                 destroy({
-                                                                    tenant: tenant.id,
                                                                     component: component.id,
                                                                 }).url,
                                                                 { preserveScroll: true },
