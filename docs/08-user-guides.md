@@ -11,8 +11,10 @@ Capabilities referenced here are defined in [07](07-roles-and-permissions.md).
 
 **Who:** anyone checking whether a service is down. No account, no login.
 
-**Where:** `https://acme.<platform>` (platform subdomain), `https://status.acme.com`
-(customer domain), or `http://<app>/status/{tenantId}` in development.
+**Where:** `https://acme.<platform>` (platform subdomain) or `https://status.acme.com`
+(customer domain). The hostname alone is the whole address — its root serves the
+page. `/status/{tenantId}` still resolves a page by key, and `/status.json` on
+either hostname returns the snapshot.
 
 **What they see:**
 

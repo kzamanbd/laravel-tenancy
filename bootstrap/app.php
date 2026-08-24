@@ -25,6 +25,19 @@ return Application::configure(basePath: dirname(__DIR__))
             // serving it has to work when the database is unavailable, and the
             // only way to keep that true is to give it no middleware that could
             // touch one.
+            // A tenant's own hostname *is* its status page: acme.example.com
+            // answers with the page itself rather than a marketing shell that
+            // makes a reader hunt for it mid-outage.
+            //
+            // Registered after the central domain's `/`, which is
+            // domain-constrained and so still matches first on the platform's
+            // own host.
+            Route::get('/', [PublishedStatusPageController::class, 'byHost'])
+                ->name('status-page.root');
+
+            Route::get('status.json', [PublishedStatusPageController::class, 'byHostJson'])
+                ->name('status-page.root.json');
+
             // Where the edge sends a request that arrived on a customer's own
             // hostname. Caddy rewrites to this path and forwards the Host, so
             // the origin never needs a route per domain.

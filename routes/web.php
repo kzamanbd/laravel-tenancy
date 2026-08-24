@@ -14,13 +14,22 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 /*
+| The marketing page belongs to the platform, not to any one status page. A
+| tenant's own hostname answers with its published status page instead -- see
+| the root route in bootstrap/app.php.
+*/
+foreach (config('tenancy.central_domains') as $domain) {
+    Route::domain($domain)->group(function () {
+        Route::inertia('/', 'welcome')->name('home');
+    });
+}
+
+/*
 | Universal routes resolve on BOTH the central domain and any tenant domain.
 | On a tenant domain the tenant is initialized; on a central domain the
 | UniversalRoutes feature lets the request through without a tenant.
 */
 Route::middleware(['universal', InitializeTenancyByDomain::class])->group(function () {
-    Route::inertia('/', 'welcome')->name('home');
-
     /*
     | The dashboard reports on whichever tenant the host resolved to, so it
     | needs the same membership check the workspace does. Without it, any

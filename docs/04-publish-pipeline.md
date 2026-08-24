@@ -146,10 +146,16 @@ directly and never reaches this application.
 
 | Route | Serves |
 |---|---|
-| `GET /status/{tenant}` | `pages/{tenant}/index.html` |
+| `GET /` on a tenant host | the page itself — a reader types the hostname and nothing else |
+| `GET /status.json` on a tenant host | the snapshot |
+| `GET /status/{tenant}` | `pages/{tenant}/index.html`, addressed by key |
 | `GET /status/{tenant}/status.json` | the snapshot |
-| `GET /status/by-host` | resolves `Host` → tenant via the pointer file, then the HTML |
+| `GET /status/by-host` | where the edge rewrites a custom domain; resolves `Host` via the pointer file |
 | `GET /status/by-host/status.json` | same, JSON |
+
+The root route is registered *after* the central domain's `/`, which is
+domain-constrained and therefore still matches first on the platform's own host:
+`example.com` is the marketing page, `acme.example.com` is Acme's status page.
 
 Invariants:
 

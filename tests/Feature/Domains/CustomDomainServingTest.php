@@ -9,6 +9,7 @@ use App\Models\Tenant;
 use App\Services\StatusPagePublisher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,4 +130,51 @@ it('matches hostnames case-insensitively', function () {
     $this->publisher->publish($this->tenant);
 
     $this->get('http://'.strtoupper($domain->domain).'/status/by-host')->assertOk();
+});
+
+it('answers a tenant hostname at the root with its status page, and no queries', function () {
+    // A reader mid-outage types the hostname, nothing more. Making them find
+    // /status/{id} first is the sort of friction a status page exists to remove.
+    asSuperAdmin(fn () => Component::factory()->forTenant($this->tenant)->create(['name' => 'Checkout API']));
+
+    $this->publisher->publish($this->tenant);
+
+    $host = asSuperAdmin(fn () => $this->tenant->domains()->firstOrFail()->domain);
+
+    $queries = [];
+    DB::listen(function ($query) use (&$queries): void {
+        $queries[] = $query->sql;
+    });
+
+    $this->get("http://{$host}/")
+        ->assertOk()
+        ->assertSee('Checkout API');
+
+    // The root of a status page carries the same promise as the rest of the
+    // read path: it must survive the database being gone.
+    expect($queries)->toBeEmpty();
+});
+
+it('serves the snapshot at the root as status.json', function () {
+    $this->publisher->publish($this->tenant);
+
+    $host = asSuperAdmin(fn () => $this->tenant->domains()->firstOrFail()->domain);
+
+    $this->getJson("http://{$host}/status.json")
+        ->assertOk()
+        ->assertJsonPath('page.name', 'Acme Platform');
+});
+
+it('404s at the root of a host with no published page', function () {
+    $host = asSuperAdmin(fn () => $this->tenant->domains()->firstOrFail()->domain);
+
+    $this->get("http://{$host}/")->assertNotFound();
+});
+
+it('keeps the marketing page on the central domain', function () {
+    // The platform's own host is not a status page, and its `/` is
+    // domain-constrained so it still matches first.
+    $this->get('http://'.config('tenancy.central_domains')[0].'/')
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page->component('welcome'));
 });

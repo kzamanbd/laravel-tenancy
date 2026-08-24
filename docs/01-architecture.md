@@ -48,7 +48,7 @@ that can fail: no database, no session, no application logic.
 ```mermaid
 flowchart LR
     subgraph Readers["Read plane — no database"]
-        V[Visitor] -->|"page.example.com"| CDN[(CDN / object storage)]
+        V[Visitor] -->|"acme.example.com/"| CDN[(CDN / object storage)]
         CDN -.->|miss| ORIGIN["PublishedStatusPageController"]
         ORIGIN --> DISK[("status_pages disk")]
     end
