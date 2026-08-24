@@ -81,14 +81,20 @@ it('rejects a hostname already connected to another page', function () {
         ->assertSessionHasErrors('domain');
 });
 
-it('refuses to add a custom domain on the free plan', function () {
+it('lets the free plan add a custom domain, unverified', function () {
     asSuperAdmin(fn () => $this->tenant->organization->forceFill(['plan' => Plan::Free])->save());
 
     $this->actingAs($this->owner)
         ->post("{$this->base}/domains", ['domain' => 'free.acme.test'])
-        ->assertSessionHasErrors('domain');
+        ->assertSessionHasNoErrors();
 
-    expect(asSuperAdmin(fn () => Domain::query()->where('domain', 'free.acme.test')->exists()))->toBeFalse();
+    $domain = asSuperAdmin(fn () => Domain::query()->where('domain', 'free.acme.test')->first());
+
+    expect($domain)->not->toBeNull()
+        // Added is not connected: nothing is served and no certificate is
+        // obtained until DNS proves the customer owns the name.
+        ->and($domain->isVerified())->toBeFalse()
+        ->and($domain->mayIssueCertificate())->toBeFalse();
 });
 
 it('refuses domain changes from a viewer', function () {

@@ -22,7 +22,11 @@ use Illuminate\Support\Facades\Log;
  * A certificate is issued only when all of these hold:
  *  - the hostname is one we have a record of;
  *  - its owner has proven control of it via DNS;
- *  - the owning organization is on a plan that includes custom domains.
+ *  - the owning organization has a known plan.
+ *
+ * Custom domains are included in every plan, free tier included, so the middle
+ * condition is the only one carrying weight here. A free customer still has to
+ * own the name they are pointing at us.
  *
  * Caddy treats any non-2xx as "do not issue", so every refusal is a 404: there
  * is no reason to tell an unauthenticated caller which hostnames we know about.
@@ -69,8 +73,11 @@ class TlsAskController extends Controller
         $tenant = Tenant::query()->with('organization')->find($domain->tenant_id);
         $plan = $tenant?->organization?->plan;
 
+        // Every plan allows custom domains; a null plan means the tenant has no
+        // organization at all, and an unknown billing state is not something to
+        // obtain a publicly trusted certificate on.
         if ($plan === null || ! $plan->allowsCustomDomain()) {
-            return $this->refuse($hostname, 'plan does not include custom domains');
+            return $this->refuse($hostname, 'no plan permitting custom domains');
         }
 
         return response('', 200);

@@ -189,7 +189,7 @@ Unique on `(tenant_id, channel, endpoint)`.
 | Components | 5 | 25 | 100 | 100 | ∞ |
 | Subscribers | 50 | 1,000 | 5,000 | 25,000 | ∞ |
 | Monitors | 0 | 20 | 100 | 100 | ∞ |
-| Custom domain | ✗ | ✓ | ✓ | ✓ | ✓ |
+| Custom domain | ✓ | ✓ | ✓ | ✓ | ✓ |
 | "Powered by" badge | shown | hidden | hidden | hidden | hidden |
 
 Enforcement today:
@@ -197,6 +197,6 @@ Enforcement today:
 | Limit | Enforced where |
 |---|---|
 | Subscribers | `SubscriptionController::store` (public sign-up) and `SubscriberController` (admin add) |
-| Custom domain | `DomainController::store` refuses the add; `TlsAskController` refuses the certificate |
+| Custom domain | Included in every plan. `TlsAskController` still refuses a certificate until DNS proves ownership |
 | Components, monitors | **Defined but not enforced at write time yet** |
 | "Powered by" badge | `tenants.show_powered_by`, set per page — not currently forced from the plan |

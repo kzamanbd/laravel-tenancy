@@ -28,9 +28,20 @@ enum Plan: string
         };
     }
 
+    /**
+     * Every plan may point its own hostname at the platform, free included.
+     *
+     * This is a pricing decision, not a safety one. What stops the platform
+     * being a convenient phishing host is that a certificate is issued only for
+     * a hostname whose owner proved control of it by DNS -- see `DomainVerifier`
+     * and `TlsAskController`. That proof is unchanged and unchangeable by plan;
+     * a free customer still has to own the name they are pointing at us.
+     *
+     * Kept as a method rather than inlined so re-gating it later is one edit.
+     */
     public function allowsCustomDomain(): bool
     {
-        return $this !== self::Free;
+        return true;
     }
 
     public function showsPoweredByBadge(): bool

@@ -65,8 +65,10 @@ It answers **200 only when all of these hold**:
 1. the hostname passes a cheap shape check (≤ 253 chars, valid label syntax), so
    obvious junk never reaches the database;
 2. we have a `domains` row for it;
-3. its `verification_status` is `verified`;
-4. the owning organization's plan includes custom domains.
+3. its `verification_status` is `verified` — **the one that carries the weight**;
+4. the owning organization has a plan at all. Every plan now includes custom
+   domains, so this only refuses a tenant with no organization, whose billing
+   state is unknown.
 
 Every refusal is a **404**, never a 403 or a message. Caddy treats any non-2xx as
 "do not issue", and there is no reason to tell an unauthenticated caller which

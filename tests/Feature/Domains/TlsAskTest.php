@@ -56,10 +56,20 @@ it('refuses a domain whose verification failed', function () {
     $this->get('/internal/tls-ask?domain='.$domain->domain)->assertNotFound();
 });
 
-it('refuses a verified domain on the free plan', function () {
-    // The plan risk register calls this out directly: free custom domains with
-    // automatic certificates are a phishing vector.
+it('issues for a verified domain on the free plan', function () {
+    // Custom domains are included in every plan. What keeps this from being a
+    // free phishing host is the proof of ownership below, not the price -- a
+    // free customer still had to demonstrate control of the name by DNS.
     $domain = domainFor(Plan::Free, fn (Domain $domain) => $domain->markVerified());
+
+    $this->get('/internal/tls-ask?domain='.$domain->domain)->assertOk();
+});
+
+it('still refuses an unverified domain on the free plan', function () {
+    // The gate that actually matters. Free plus unverified is exactly the
+    // combination someone would reach for to get a certificate for a name they
+    // do not own.
+    $domain = domainFor(Plan::Free);
 
     $this->get('/internal/tls-ask?domain='.$domain->domain)->assertNotFound();
 });
