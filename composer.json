@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "upfront/upfront",
     "type": "project",
-    "description": "Multi-tenant Laravel application with Inertia + React.",
+    "description": "UpFront — multi-tenant status pages that keep themselves honest.",
     "keywords": [
         "laravel",
         "framework",
