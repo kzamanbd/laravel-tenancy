@@ -1,8 +1,30 @@
-# Laravel Tenancy
+# UpFront
 
-Multi-tenant Laravel application. Domain/subdomain tenancy via [`stancl/tenancy`](https://tenancyforlaravel.com), a React + Inertia SPA frontend, and [Laravel Fortify](https://laravel.com/docs/fortify) authentication (login, registration, password reset, email verification, two-factor).
+Multi-tenant status pages that stay honest without a human remembering to be honest.
 
-Each account registers on its own **subdomain** (`acme.laravel-tenancy.test`); the central domain hosts sign-up and tenant management.
+Customers describe their systems as components, report incidents and maintenance against them, and publish a page their own customers read during an outage. The published page is a flat file on object storage, so it survives the outage it is reporting.
+
+Built on Laravel 13 with PostgreSQL Row-Level Security for tenant isolation, domain/subdomain tenancy via [`stancl/tenancy`](https://tenancyforlaravel.com), a React + Inertia SPA admin, and [Laravel Fortify](https://laravel.com/docs/fortify) authentication (login, registration, password reset, email verification, two-factor).
+
+Each account gets its own **subdomain** (`acme.laravel-tenancy.test` locally); the central domain hosts sign-up, the portfolio dashboard, and workspace administration.
+
+> The local development domain stays `laravel-tenancy.test` because Herd binds it to the directory name. Only the display name is `UpFront`; set `CENTRAL_DOMAIN` to the real domain in production.
+
+## Documentation
+
+Architecture and operating docs live in [`docs/`](docs/README.md):
+
+| Doc | Answers |
+|---|---|
+| [Architecture](docs/01-architecture.md) | The two planes, request paths, and the rules the design obeys |
+| [Tenancy & isolation](docs/02-tenancy-and-isolation.md) | How Row-Level Security keeps tenants apart |
+| [Data model](docs/03-data-model.md) | Tables, relationships, enums, plan limits |
+| [Publish pipeline](docs/04-publish-pipeline.md) | Database change → static page on a CDN |
+| [Custom domains & TLS](docs/05-custom-domains-tls.md) | Verification and on-demand certificates |
+| [Notifications](docs/06-notifications.md) | Subscriber lifecycle and fan-out |
+| [Roles & permissions](docs/07-roles-and-permissions.md) | Who may do what |
+| [User guides](docs/08-user-guides.md) | Operating the product at every user level |
+| [Operations](docs/09-operations.md) | Setup, deploy topology, runbooks, known gaps |
 
 ## Tech stack
 
